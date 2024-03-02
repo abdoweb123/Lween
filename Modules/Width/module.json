@@ -1,0 +1,11 @@
+{
+    "name": "Width",
+    "alias": "Width",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Width\\Providers\\WidthServiceProvider"
+    ],
+    "files": []
+}

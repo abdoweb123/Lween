@@ -1,0 +1,11 @@
+{
+    "name": "OS",
+    "alias": "os",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\OS\\Providers\\OSServiceProvider"
+    ],
+    "files": []
+}

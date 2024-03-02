@@ -1,0 +1,11 @@
+{
+    "name": "Height",
+    "alias": "Height",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Height\\Providers\\HeightServiceProvider"
+    ],
+    "files": []
+}

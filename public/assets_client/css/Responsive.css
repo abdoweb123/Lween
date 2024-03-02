@@ -1,0 +1,166 @@
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+:root {
+  --mainColor1: #939598;
+  --mainColor2: rgb(0, 0, 0);
+  --mainColor3: #06dd88;
+  --mainColor4: #ffffff;
+  --mainColor5: #e8e8e8;
+}
+.offcanvas{
+  background-color: var(--mainColor2) ;
+  color: var(--mainColor5);
+}
+.offcanvas-header .btn-close{
+color: var(--mainColor5);
+font-size: 1.5rem;
+}
+@media only screen and (max-width: 1254px) {
+  .icon-menu:hover{
+    color: var(--mainColor4);
+  }
+.navbar .container-fluid{
+padding-inline: 1rem;
+}
+
+body{
+  overflow-x: hidden;
+}
+}
+
+@media only screen and (max-width: 1064px) {
+  .navbar-expand-lg .navbar-collapse {
+display: none !important;
+  }
+  .form-res{
+    display: flex;
+  }
+  .icon-menu{
+    display: flex !important;
+  }
+.row-small{
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap;
+overflow-x: auto;
+overflow-y: hidden;
+}
+.row-small .zoom {
+  max-width: 20%;
+}
+
+  .nav-pills-profile-sm .nav-link.active {
+    background-color: var(--mainColor1);
+    border-radius: 0.5125rem;
+    color: var(--mainColor4) !important;
+}
+
+  .navbar .container-fluid{
+    padding-inline: 4rem;
+    }
+    .nav-slider{
+      display: none;
+    }
+    #navBar {
+      background-color: var(--mainColor1)}
+
+
+.flag ,.floatwhatsapp {
+  bottom: 2%;
+}
+
+.back-to-top {
+  bottom: 10%;
+}
+
+.flag-list {
+  bottom: 10%;
+}
+
+
+.row-res{
+  display: flex;
+}
+.row-res-img{
+  display: none;
+}
+
+}
+@media only screen and (max-width: 1110px) {
+
+  .sidenav {padding-top: 15px;}
+  .side-menu .text-search{
+    font-weight: 400;
+    font-size: 20px;
+    padding-block: 80px;
+
+  }
+  .overflow-row {
+    overflow-x: scroll;
+  }
+  .btn-close:focus {
+    box-shadow: 0 0 0 0rem rgba(13,110,253,.25);
+}
+
+}
+@media only screen and (max-width: 991px) {
+  .nav-pills-profile{
+    display: none;
+  }
+  .nav-pills {
+    flex-wrap: nowrap;
+    text-align: center;
+    justify-content: center;
+  } 
+  .nav-pills h6{
+    flex-wrap: nowrap;
+    font-size: 0.8rem;
+    margin-top: 10px;
+  } 
+  .profile .nav-pills h6 {
+    text-align: center;
+}
+  .icon-menu-profile{
+    display: flex !important;
+    padding-inline: 2rem;
+
+  }
+  
+
+}
+@media only screen and (max-width: 900px) {
+  .item-container{
+    height: 250px;
+
+  }
+  .flex-grow-1 {
+    font-size: 10px;
+  }
+  .text-price{
+    font-size: 14px;
+  }
+  .flex-shrink-0 img {
+    max-width: 40px;
+}
+  .overlay2{
+
+    font-size: 1.5rem;}
+.container{
+    width: 95%;
+}
+.navbar .container-fluid{
+  padding-inline: 2rem;
+  }
+
+h2 {
+    font-size: 2rem;}
+    .section {
+        padding: 2.3rem 0rem 2.3rem 0rem;
+    }
+
+}
+

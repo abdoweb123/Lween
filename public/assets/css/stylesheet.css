@@ -1,0 +1,457 @@
+@import "style.css";
+@import "loader.css";
+@import "slider.css";
+@import "Cairo.woff";
+
+.dropdown_hover:hover>.dropdown-menu {
+    display: block;
+}
+
+.form-control:focus {
+    border-color: none;
+    box-shadow: none;
+}
+
+@media all and (min-width: 992px) {
+    .navbar .nav-item .dropdown-menu {
+        display: none;
+    }
+
+    .navbar .nav-item:hover .dropdown-menu {
+        display: block;
+    }
+
+    .navbar .nav-item .dropdown-menu {
+        margin-top: 0;
+    }
+
+}
+
+.nav-item.active {
+    padding: 0px 10px;
+    border-radius: 50px;
+}
+
+.nav,
+.nav-link,
+.nav-tabs .nav-link:focus,
+.nav-tabs .nav-link:hover {
+    border: none !important;
+    color: var(--second--color);
+}
+
+.nav-item.active .nav-link,
+.nav-link.active {
+    padding: 10px 30px;
+    border-radius: 50px;
+    background-color: var(--main--color) !important;
+    color: var(--third--color) !important;
+}
+
+
+.img_hover {
+    --g: 8px;
+    --b: 2px;
+    --c: var(--main--color);
+
+    padding: calc(var(--g) + var(--b));
+    --_c: #0000 0 25%, var(--c) 0 50%;
+    --_g1: repeating-linear-gradient(90deg, var(--_c)) repeat-x;
+    --_g2: repeating-linear-gradient(180deg, var(--_c)) repeat-y;
+    background:
+        var(--_g1) var(--_p, 25%) 0, var(--_g2) 0 var(--_p, 125%),
+        var(--_g1) var(--_p, 125%) 100%, var(--_g2) 100% var(--_p, 25%);
+    background-size: 200% var(--b), var(--b) 200%;
+    cursor: pointer;
+    /*filter: grayscale(50%);*/
+    transition: .3s;
+    margin: 0px 8px;
+}
+
+.img_hover:hover {
+    --_p: 75%;
+    /*filter: grayscale(0%);*/
+}
+
+.carousel-caption {
+    background-color: transparent;
+    max-width: 500px;
+    min-width: 300px;
+    top: 20%;  
+    right: 30%; 
+    left: 50%;
+    
+    font-size:44px
+    
+}
+@media (max-width: 777px){
+
+    .carousel-caption {
+        font-size:38px
+    }
+}
+@media (max-width: 577px){
+
+    .carousel-caption {
+        font-size:28px
+    }
+}
+@media (max-width: 477px){
+
+    .carousel-caption {
+        font-size:18px
+    }
+}
+.fot_icon2 {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    border-radius: 50%;
+    background-color: #00ff0d;
+    color: var(--second--color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fot_icon2:hover {
+    background-color: var(--third--color);
+    color: var(--second--color);
+}
+
+.fot_icon3 {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    border-radius: 50%;
+    background-color: var(--main--color);
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fot_icon3:hover {
+    background-color: var(--third--color);
+    color: var(--second--color);
+}
+
+
+
+.imw {
+    margin: auto;
+    max-width: 80%;
+    position: relative;
+}
+
+.device {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.overlay {
+    position: absolute;
+    top: 9;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #000;
+}
+
+.ccc:hover .overlay {
+    opacity: 0.7;
+}
+
+.text {
+    color: white;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+@media only screen and (max-width: 653px) {
+    .cccard {
+        margin-top: 25px;
+    }
+    .card {
+        /* font-size: 11px; */
+        padding: 10px;
+        text-align: center;
+    }
+
+    
+    /* .card li:not(.iti__country) span {
+        width: 17px !important;
+        height: 17px !important;
+        font-size: 9px !important;
+    }
+
+    .card li:not(.iti__country) {
+        font-size: 9px;
+    }
+
+    .countdown ul{
+        display: flex;
+    }
+
+    .cccard h5 {
+        font-size: 9px;
+    } */
+}
+
+.cccard {
+    border: none;
+    padding: 3px;
+    box-shadow: 2px 3px 0px 3px #ccc;
+    filter: drop-shadow(2px 2px 2px #ccc);
+    overflow: hidden;
+}
+
+
+.flip-container {
+    margin: auto;
+    -webkit-perspective: 1000;
+    background: transparent;
+    margin: 10px auto;
+}
+
+.flip-container img {
+    max-height: 100%;
+}
+
+.flip-container:hover .flipper,
+.flip-container.hover .flipper {
+    -webkit-transform: rotateY(180deg);
+}
+
+
+.flipper {
+    width: 100%;
+    height: 200px;
+    display: block;
+
+    -webkit-transition: 1.5s;
+    -webkit-transform-style: preserve-3d;
+}
+
+.front,
+.back {
+    width: 100%;
+    height: 200px;
+    margin: auto;
+    -webkit-backface-visibility: hidden;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.front {
+    z-index: 2;
+}
+
+.back {
+    -webkit-transform: rotateY(180deg);
+}
+
+:root {
+    --smaller: .75;
+}
+
+
+.card li:not(.iti__country) {
+    display: inline-block;
+    list-style-type: none;
+    padding: 5px;
+}
+
+.card li:not(.iti__country) span {
+    display: block;
+    font-size: 18px;
+    border: 1px solid var(--main--color);
+    width: 50px;
+    height: 50px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.card .emoji {
+    display: none;
+    padding: 1rem;
+}
+
+.card .emoji span {
+    font-size: 4rem;
+    padding: 0 .5rem;
+}
+
+@media all and (max-width: 768px) {
+    .card h1 {
+        font-size: calc(1.5rem * var(--smaller));
+    }
+
+    .card li {
+        font-size: calc(1.125rem * var(--smaller));
+    }
+
+    .card li span {
+        font-size: calc(2.375rem * var(--smaller));
+    }
+}
+
+
+.ribbon {
+    width: 150px;
+    height: 34px;
+    top: 20px;
+    z-index: 99;
+    position: absolute;
+    display: block;
+    background: #FF0000;
+    color: #333;
+    font-family: arial;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+    line-height: 34px;
+    transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+}
+
+
+.point {
+    cursor: pointer;
+}
+
+.dropdown-toggle::after {
+    border: none !important;
+    font: normal normal normal 14px/1 FontAwesome;
+    content: "\f107" !important;
+    vertical-align: 0;
+    color: var(--main--color);
+    float: right;
+    padding-top: 5px;
+}
+
+.slick-track {
+    padding: 15px 0px;
+}
+
+.slick-next:before,
+.slick-prev:before {
+    font-size: 25px !important;
+    opacity: 1 !important;
+    color: #000 !important;
+}
+
+.img__wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.img__wrapper img {
+    width: 100%;
+}
+
+.sold_out {
+    top: 3em;
+    width: 300px;
+    left: -5em;
+    color: #fff;
+    display: block;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    letter-spacing: .06em;
+    background-color: #A00;
+    padding: 0.5em 5em 0.4em 5em;
+    text-shadow: 0 0 0.75em #444;
+    box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
+    font: bold 16px/1.2em Arial, Sans-Serif;
+    -webkit-text-shadow: 0 0 0.75em #444;
+    -webkit-box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
+    -webkit-transform: rotate(-45deg) scale(0.75, 1);
+    z-index: 10;
+}
+
+.sold_out:before {
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    margin: -0.3em -5em;
+    transform: scale(0.7);
+    -webkit-transform: scale(0.7);
+    border: 2px rgba(255, 255, 255, 0.7) dashed;
+}
+
+
+
+.iti--separate-dial-code .iti__selected-flag {
+    background-color: transparent !important;
+}
+.iti--allow-dropdown .iti__flag-container, .iti--separate-dial-code .iti__flag-container {
+    left: auto !important;
+}
+.iti__country-list {
+    overflow-y: auto !important;
+}
+.iti {
+    width: 100% !important;
+}
+
+ul#iti-0__country-listbox {
+    position: absolute;
+    left: 0px;
+    direction: ltr;
+}
+
+
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ddd
+}
+
+::-webkit-scrollbar-thumb {
+    background: -webkit-gradient(linear, left top, left bottom, from(var(--main--color)), to(#6c6c6c));
+    background: linear-gradient(var(--main--color), #6c6c6c);
+    border-radius: 15px
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#6c6c6c), to(var(--main--color)));
+    background: linear-gradient(#6c6c6c, var(--main--color))
+}
+
+.navbar-collapse i:hover{
+    color: #000;
+}
+li.iti__divider {
+    width: 100%;
+}

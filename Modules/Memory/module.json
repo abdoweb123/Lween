@@ -1,0 +1,11 @@
+{
+    "name": "Memory",
+    "alias": "memory",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Memory\\Providers\\MemoryServiceProvider"
+    ],
+    "files": []
+}

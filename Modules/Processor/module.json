@@ -1,0 +1,11 @@
+{
+    "name": "Processor",
+    "alias": "processor",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Processor\\Providers\\ProcessorServiceProvider"
+    ],
+    "files": []
+}
