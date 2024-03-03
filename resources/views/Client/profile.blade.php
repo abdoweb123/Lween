@@ -126,7 +126,7 @@
                 tabindex="0">
 
                 <div class="row py-3">
-                  <a class="btn btn-dark w-auto px-5" type="button" href="addNewadress.blade.php">اضافة عنوان</a>
+                  <a class="btn btn-dark w-auto px-5" type="button" href="addNewAddress.blade.php">اضافة عنوان</a>
                 </div>
                 <div class="row gap-3 address py-2 justify-content-center">
                   <div class="col-lg-3 col-8 py-3 position-relative" data-aos="flip-left" data-aos-duration="1000">

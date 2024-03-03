@@ -73,6 +73,12 @@ Route::group(['as' => 'Client.', 'middleware' => [Localization::class, ForceSSL:
         // update product_cart quantity with ajax
         Route::Post('/update/product/quantity/', [HomeController::class, 'updateProductCartQuantity'])->name('updateProductCartQuantity');
         Route::Post('/remove/cart/element', [HomeController::class, 'removeCartElement'])->name('removeCartElement');
+        Route::post('/find/coupon', [HomeController::class, 'findCoupon'])->name('findCoupon');
+        Route::get('checkout/choose-address-and-shipping', [HomeController::class, 'chooseAddressShipping'])->name('chooseAddressShipping');
+//        Route::POST('/place-order/{delivery_id}', [HomeController::class, 'storeOrder'])->name('storeOrder');
+        Route::view('/add/new/address', 'Client.addNewAddress')->name('addNewAddress');
+        Route::post('/store/address', [HomeController::class, 'storeAddress'])->name('storeAddress');
+
     });
 
 });

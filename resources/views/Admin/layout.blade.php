@@ -65,6 +65,7 @@
                 @include('order::layouts.sidebar')
                 @include('category::layouts.sidebar')
                 @include('device::layouts.sidebar')
+                @include('coupon::layouts.sidebar')
                 @include('slider::layouts.sidebar')
                 @include('ad::layouts.sidebar')
                 @include('service::layouts.sidebar')
@@ -77,6 +78,7 @@
                 @include('admin::layouts.sidebar')
                 @include('client::layouts.sidebar')
                 @include('country::layouts.sidebar')
+
 
 
                 @if (lang('en'))

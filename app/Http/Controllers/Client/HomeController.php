@@ -20,6 +20,7 @@ use Modules\Client\Entities\Model as Client;
 use Modules\Contact\Entities\Model as Contact;
 use Modules\Brand\Entities\Model as Brand;
 use Modules\Country\Entities\Country;
+use Modules\Coupon\Entities\Model as Coupon;
 use Modules\Device\Entities\Device;
 use Modules\Order\Entities\Model as Order;
 use Modules\Service\Entities\Model as Service;
@@ -157,31 +158,126 @@ class HomeController extends BasicController
     }
 
 
-    public function submit($delivery_id, Request $request)
+//    public function submit($delivery_id, Request $request)
+//    {
+//
+//        if (auth('client')->check()) {
+//            $Client = auth('client')->user();
+//        } else {
+//            $Client = Client::where('phone', "%{$request->phone}%")->first();
+//            if (! $Client) {
+//                $Client = Client::create([
+//                    'country_id' => $request->country_id,
+//                    'name' => $request->name,
+//                    'email' => $request->email,
+//                    'phone' => $request->phone,
+//                    'password' => Hash::make(Str::random(10)),
+//                ]);
+//            }
+//        }
+//
+//        if ($delivery_id == 1) {
+//            $branch_id = null;
+//            if ($request->address_id) {
+//                $Address = Address::find($request->address_id);
+//            } else {
+//                $Address = Address::create([
+//                    'client_id' => $Client->id,
+//                    'region_id' => $request->region_id,
+//                    'block' => $request->block,
+//                    'road' => $request->road,
+//                    'building_no' => $request->building_no,
+//                    'floor_no' => $request->floor_no,
+//                    'apartment' => $request->apartment,
+//                    'type' => $request->type,
+//                    'additional_directions' => $request->additional_directions,
+//                ]);
+//            }
+//        } else {
+//            $Address = null;
+//            $branch_id = $request->branch_id;
+//        }
+//
+//        $Cart = Cart::where('client_id', client_id())->with('Device', 'Color')->get();
+//        $sub_total = 0;
+//        $discount = 0;
+//        foreach ($Cart as $key => $CartItem) {
+//            $PriceItem = $CartItem->Device->Items->when($CartItem->item_id, function ($query) use($CartItem) {
+//                                return $query->where('id', $CartItem->item_id);
+//                            })->first() ?? $CartItem->Device;
+//            $sub_total += $PriceItem->CalcPrice() * $CartItem->quantity;
+//            $discount += ($PriceItem->Price() - $PriceItem->CalcPrice()) * $CartItem->quantity;
+//        }
+//        $vat = $sub_total / 100 * setting('vat');
+//        $delivery_cost = $Address ? $Address->Region()->select('delivery_cost')->value('delivery_cost') : 0;
+//        $Order = Order::create([
+//            'client_id' => $Client->id,
+//            'delivery_id' => $delivery_id,
+//            'address_id' => $Address ? $Address->id : null,
+//            'branch_id' => $branch_id,
+//            'payment_id' => $request->payment_id,
+//
+//            'sub_total' => $sub_total,
+//            'discount' => $discount,
+//            'discount_percentage' => 0,
+//            'vat' => $sub_total / 100 * setting('vat'),
+//            'vat_percentage' => setting('vat'),
+//            'coupon' => 0,
+//            'coupon_percentage' => 0,
+//            'charge_cost' => $delivery_cost,
+//            'net_total' => $sub_total + $vat + $delivery_cost,
+//
+//        ]);
+//
+//        foreach ($Cart as $key => $CartItem) {
+//            $SelectedItem = $CartItem->Device->Items->when($CartItem->item_id, function ($query) use($CartItem) {
+//                                return $query->where('id', $CartItem->item_id);
+//                            })->first() ?? $CartItem->Device;
+//            $Order->Devices()->attach($CartItem->device->id, [
+//                'color_id' => $CartItem->color_id > 0 ? $CartItem->color_id : null,
+//                'price' => $SelectedItem->Calcprice(),
+//                'quantity' => $CartItem->quantity,
+//                'total' => $SelectedItem->Calcprice() * $CartItem->quantity,
+//            ]);
+//            $CartItem->Device->Items()->when($CartItem->item_id, function ($query) use($CartItem) {
+//                return $query->where('id', $CartItem->item_id);
+//            })->decrement('quantity', $CartItem->quantity) ?? Device::where('id', $CartItem->device->id)->decrement('quantity', $CartItem->quantity);
+//            $CartItem->delete();
+//        }
+//
+//        WhatsApp::SendOrder($Order->id);
+//        try {
+//            Mail::to(['apps@emcan-group.com', setting('email'), $Client->email])->send(new OrderSummary($Order));
+//        } catch (\Throwable $th) {
+//
+//        }
+//        alert()->success(__('trans.order_added_successfully'));
+//
+//        return redirect()->route('Client.home');
+//    }
+
+
+    public function chooseAddressShipping(Request $request)
     {
+        $coupon_code = $request->code;
+        $addresses = Address::query()->where('client_id',client_id())->get();
+        return view('Client.Purchase',compact('coupon_code','addresses'));
+    }
 
-        if (auth('client')->check()) {
-            $Client = auth('client')->user();
-        } else {
-            $Client = Client::where('phone', "%{$request->phone}%")->first();
-            if (! $Client) {
-                $Client = Client::create([
-                    'country_id' => $request->country_id,
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'password' => Hash::make(Str::random(10)),
-                ]);
-            }
-        }
+    public function storeAddress(Request $request)
+    {
+        return $request;
+    }
 
+    public function storeOrder(Request $request, $delivery_id = null)
+    {
         if ($delivery_id == 1) {
             $branch_id = null;
             if ($request->address_id) {
                 $Address = Address::find($request->address_id);
             } else {
                 $Address = Address::create([
-                    'client_id' => $Client->id,
+                    'client_id' => Client_id(),
                     'region_id' => $request->region_id,
                     'block' => $request->block,
                     'road' => $request->road,
@@ -202,15 +298,15 @@ class HomeController extends BasicController
         $discount = 0;
         foreach ($Cart as $key => $CartItem) {
             $PriceItem = $CartItem->Device->Items->when($CartItem->item_id, function ($query) use($CartItem) {
-                                return $query->where('id', $CartItem->item_id);
-                            })->first() ?? $CartItem->Device;
+                    return $query->where('id', $CartItem->item_id);
+                })->first() ?? $CartItem->Device;
             $sub_total += $PriceItem->CalcPrice() * $CartItem->quantity;
             $discount += ($PriceItem->Price() - $PriceItem->CalcPrice()) * $CartItem->quantity;
         }
         $vat = $sub_total / 100 * setting('vat');
         $delivery_cost = $Address ? $Address->Region()->select('delivery_cost')->value('delivery_cost') : 0;
         $Order = Order::create([
-            'client_id' => $Client->id,
+            'client_id' => Client_id(),
             'delivery_id' => $delivery_id,
             'address_id' => $Address ? $Address->id : null,
             'branch_id' => $branch_id,
@@ -230,8 +326,8 @@ class HomeController extends BasicController
 
         foreach ($Cart as $key => $CartItem) {
             $SelectedItem = $CartItem->Device->Items->when($CartItem->item_id, function ($query) use($CartItem) {
-                                return $query->where('id', $CartItem->item_id);
-                            })->first() ?? $CartItem->Device;
+                    return $query->where('id', $CartItem->item_id);
+                })->first() ?? $CartItem->Device;
             $Order->Devices()->attach($CartItem->device->id, [
                 'color_id' => $CartItem->color_id > 0 ? $CartItem->color_id : null,
                 'price' => $SelectedItem->Calcprice(),
@@ -246,7 +342,7 @@ class HomeController extends BasicController
 
         WhatsApp::SendOrder($Order->id);
         try {
-            Mail::to(['apps@emcan-group.com', setting('email'), $Client->email])->send(new OrderSummary($Order));
+            Mail::to(['apps@emcan-group.com', setting('email'), auth('client')->user()->email])->send(new OrderSummary($Order));
         } catch (\Throwable $th) {
 
         }
@@ -254,7 +350,6 @@ class HomeController extends BasicController
 
         return redirect()->route('Client.home');
     }
-
 
     public function confirm(Request $request)
     {
@@ -446,6 +541,34 @@ class HomeController extends BasicController
         return response()->json([
             'success' => true,
         ]);
+    }
+
+
+    /*** find coupon (with ajax) ***/
+    public function findCoupon(Request $request)
+    {
+        $coupon_code = $request->input('coupon_code');
+        $coupon = Coupon::where('code',$coupon_code)
+                        ->whereColumn('uses_count','<','max_uses')
+                        ->first();
+
+        if ($coupon) {
+            $coupon_value = $coupon->value;
+            $total = $request->input('total_price');
+            $total = $total - ($total * ($coupon_value/100));
+
+            return response()->json([
+                'success' => true,
+                'total' => $total,
+                'copCode' => $coupon_code,
+                'message' => __('trans.congratulations_valid_coupon')
+            ]);
+        } else {
+            return response()->json([
+                'error' => false,
+                'message' => __('trans.invalidCoupon')
+            ]);
+        }
     }
 
 

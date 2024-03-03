@@ -28,5 +28,6 @@
     "Order": true,
     "Service": true,
     "Width": true,
-    "Height": true
+    "Height": true,
+    "Coupon": true
 }

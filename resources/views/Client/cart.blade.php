@@ -59,7 +59,8 @@
                 <div class="row border-1 border border-secondary p-1 rounded-1 my-2 align-items-center" data-aos="fade-up" data-aos-duration="1000">
                     <div class="col-lg-1 cart-product-delete">
                         <a onclick="deleteCartItem(this)" data-cart-id="{{$cart->id}}" data-product-id="{{$cart->device_id}}" data-template="template_for_cart_products_list">
-                            <span class="prefix d-none"><img class="send-coupon-progress" src="https://assets.zid.store/themes/f9f0914d-3c58-493b-bd83-260ed3cb4e82/spinner.gif" width="15" height="15"></span>
+                            <span class="prefix load_img" style="display: none">
+                                <img class="send-coupon-progress" src="{{asset('assets_client/imgs/spinner.png')}}" width="15" height="15"></span>
                             <span class="icon-delete-circle">
                             <span class="icon-delete">x</span>
                         </span>
@@ -162,17 +163,26 @@
                 <span>@lang('trans.vat')</span> &nbsp; <span> {{vat()}} %</span>
             </div>
         </div>
-        <div class="row p-1  my-2 ">
-            <form class="row g-2" onsubmit="preventFormSubmission(event)">
-                <label for="discount" class="py-2" >كوبون الخصم </label>
+        <div class="row p-1 my-2">
+            <div class="m-0 p-0 row">
+                <label for="coupon" class="py-2" >@lang('trans.coupon') </label>
                 <div class="col align-items-center">
-                    <input type="text" class="form-control" id="discount" placeholder="ادخل كود الخصم">
-                    </div>
-                    <div class="col-auto align-items-center">
-                    <button  id="success" class="btn btn-dark rounded-1 mb-3">ارسال</button>
+                    <input type="text" class="form-control" id="coupon_code" placeholder="@lang('trans.enterCoupon')">
                 </div>
-                <a  class="btn btn-dark rounded-1 my-2" href="Purchase.html" >متابعة الشراء</a>
-                <a  class="btn btn-outline-dark rounded-1 my-2" href="{{route('Client.home')}}" >العودة للتسوق </a>
+                <div class="col-auto align-items-center">
+                    <button onclick="sendCoupon()" class="btn btn-dark rounded-1 mb-3 send_coupon">
+                        <span class="send_coupon_span">@lang('trans.send')</span>
+                        <span class="prefix load_img_coupon" style="display: none">
+                           <img class="send-coupon-progress" src="{{asset('assets_client/imgs/spinner.png')}}" width="15" height="15">
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <form class="row g-2" action="{{ route('Client.chooseAddressShipping') }}" method="get">
+                @csrf
+                <button type="submit" class="btn btn-dark rounded-1 my-2">@lang('trans.purchase_follow_up')</button>
+                <a class="btn btn-outline-dark rounded-1 my-2" href="{{route('Client.home')}}" >@lang('trans.back_to_shopping') </a>
             </form>
         </div>
 
@@ -184,8 +194,13 @@
 
 @section('script')
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
     @foreach($carts as $cart)
+
         <script>
+            // Update price depending on quantity
             $(document).ready(function() {
                 $('select[id^="updateQuantity_{{$cart->id}}"]').change(function() {
                     var selectedOption = $(this).val();
@@ -262,7 +277,7 @@
 
                                 // Update total
                                 var subTotalPriceNum = parseFloat(subTotalPrice);
-                                $('.total_price').text(subTotalPriceNum * ({{vat()}}) / 100 + subTotalPriceNum);
+                                $('.total_price').text((subTotalPriceNum * ({{vat()}}) / 100) + subTotalPriceNum);
 
 
                             },
@@ -283,7 +298,8 @@
 
                 // Hide the delete icon and text
                 element.querySelector('.icon-delete').classList.add('d-none');
-                element.querySelector('.delete-text').classList.add('d-none');
+                element.querySelector('.icon-delete-circle').classList.add('d-none');
+                element.querySelector('.load_img').classList.add('d-inline-block');
 
                 // Extract the data attributes
                 var cartProductId = element.getAttribute('data-cart-id');
@@ -292,7 +308,7 @@
                 // Perform AJAX request to remove the element
                 $.ajax({
                     type: "POST",
-                    url: "{{route('Client.removeCartElement')}}", // Replace with your backend endpoint
+                    url: "{{route('Client.removeCartElement')}}",
                     data: {
                         cart_id: cartProductId,
                         product_id: productId
@@ -327,12 +343,87 @@
         </script>
     @endforeach
 
+
+    <script>
+        function sendCoupon() {
+
+            // Hide the send_coupon_span and show the load_img_coupon
+            $('.send_coupon_span').hide();
+            $('.load_img_coupon').show();
+
+            // Retrieve the value of the coupon code input field
+            var couponCode = $('#coupon_code').val();
+
+            var totalPriceText = $('.total_price').text();
+
+            // Remove any non-numeric characters and convert the string to a number
+            var totalPrice = parseFloat(totalPriceText.replace(/[^\d.-]/g, ''));
+
+
+            // Make an AJAX request to the server
+            $.ajax({
+                type: "POST",
+                url: "{{ route('Client.findCoupon') }}",
+                data: {
+                    coupon_code: couponCode,
+                    total_price: totalPrice,
+                    _token: '{{ csrf_token() }}', // Add CSRF token
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Coupon applied successfully
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            html: '<p>' + response.message + '</p>' +
+                                '<p>' + '@lang('trans.total')' + ': ' + response.total + ' {{Country()->currancy_code}}' + '</p>' +
+                                '<form id="saveForm" action="{{ route('Client.chooseAddressShipping') }}" method="get">' +
+                                '@csrf' +
+                                '<input type="hidden" name="code" value="'+ response.copCode +'">' +
+                                '<button type="submit" class="btn btn-dark rounded-1 my-2">{{__('trans.purchase_follow_up')}}</button>' +
+                                '</form>' +
+                                '<a class="btn btn-outline-dark rounded-1 my-2" href="{{ route('Client.home') }}">{{__('trans.back_to_shopping')}}</a>',
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                        }).then(() => {
+                            // Handle any additional logic after the SweetAlert closes
+                        });
+
+                        $(".congratulation").fadeToggle();
+                        $('.total_price').text(response.total);
+
+                        $('.send_coupon_span').show();
+                        $('.load_img_coupon').hide();
+
+                    } else {
+                        // Invalid coupon code or usage limit reached
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message,
+                            showCloseButton: false,
+                            allowOutsideClick: false,
+                        });
+                    }
+                    $('.send_coupon_span').show();
+                    $('.load_img_coupon').hide();
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error('Error:', error);
+                    // Optionally display an error message to the user
+                    alert('An error occurred while processing your request.');
+                }
+            });
+        }
+    </script>
+
+
     <script>
 
         function preventFormSubmission(event) {
             event.preventDefault();
             triggerConfettiAnimation();
-
         }
 
 
