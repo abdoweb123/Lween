@@ -6,7 +6,7 @@
         <div class=" login btn-group">
           <button type="button" class="btn btn-outline-dark dropdown-toggle gap-2 d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
             <span >
-              @if(auth('client'))
+              @if(auth()->guard('client')->check())
                 <img width="20" height="20" class="rounded-circle border" src="{{asset('assets_client/imgs/defult_user.png')}}"/>
               @else
                 <i class="fa-solid fa-user"></i>
@@ -14,7 +14,7 @@
             </span>
           </button>
           <ul class="dropdown-menu">
-              @if(auth('client'))
+              @if(auth()->guard('client')->check())
                 <li><a class="dropdown-item" href="{{route('Client.profile')}}">@lang('trans.myProfile')</a></li>
                 <li><a class="dropdown-item" href="{{route('Client.logout')}}">@lang('trans.logout')</a></li>
               @else

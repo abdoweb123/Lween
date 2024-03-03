@@ -69,6 +69,10 @@ Route::group(['as' => 'Client.', 'middleware' => [Localization::class, ForceSSL:
         Route::resource('/address', AddressController::class);
         Route::any('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::POST('/add-to-cart', [HomeController::class, 'AddToCart'])->name('AddToCart');
+        Route::get('/continue/purchasing/cart', [HomeController::class, 'continuePurchasingCart'])->name('continuePurchasingCart');
+        // update product_cart quantity with ajax
+        Route::Post('/update/product/quantity/', [HomeController::class, 'updateProductCartQuantity'])->name('updateProductCartQuantity');
+        Route::Post('/remove/cart/element', [HomeController::class, 'removeCartElement'])->name('removeCartElement');
     });
 
 });

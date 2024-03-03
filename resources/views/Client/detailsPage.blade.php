@@ -62,7 +62,7 @@
                   @endphp
               <button id="{{$height->id}}" onclick="putHeight(this, event)" class="col-2 border-1 btn btn-outline-dark length rounded-0 w-auto px-2 {{$class}}">
                 {{$height->title}}
-                <input type="radio" name="height" value="{{$height->id}}" style="display: none" {{$checked}}>
+                <input type="radio" name="height_id" value="{{$height->id}}" style="display: none" {{$checked}}>
               </button>
             @endforeach
 
@@ -79,7 +79,7 @@
                   @endphp
               <button onclick="putWidth(this)" class="col-2 border-1 width btn btn-outline-dark rounded-0 w-auto px-2 {{$class}}">
                 {{$width["title_".lang()]}}
-                  <input type="radio" name="width" value="{{$width->id}}" style="display: none" {{$checked}}>
+                  <input type="radio" name="width_id" value="{{$width->id}}" style="display: none" {{$checked}}>
               </button>
             @endforeach
 
@@ -267,8 +267,6 @@
       // Check the radio input associated with the clicked button
       radioInput.checked = true;
     }
-
-
 
     function putWidth(button) {
           event.preventDefault(); // Prevent default action

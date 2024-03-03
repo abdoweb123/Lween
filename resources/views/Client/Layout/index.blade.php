@@ -323,6 +323,8 @@
   </script>
   <!-- End Add tostr -->
 
+
+
 @yield('script')
 
 </body>

@@ -15,9 +15,9 @@
         <div class="px-2 search-input-icon">
           <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-        <div class="px-2" onclick="document.location='emptycart.html'">
+        <a class="px-2 text-white" href="{{route('Client.continuePurchasingCart')}}">
           <i class="fa-solid fa-cart-shopping"></i>
-        </div>
+        </a>
       </form>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -50,9 +50,9 @@
           <div class="px-2 search-input-icon">
             <i class="fa-solid fa-magnifying-glass"></i>
           </div>
-          <div class="px-2 " onclick="document.location='emptycart.html'">
+          <a class="px-2 text-white" href="{{route('Client.continuePurchasingCart')}}">
             <i class="fa-solid fa-cart-shopping"></i>
-          </div>
+          </a>
         </form>
       </div>
     </div>

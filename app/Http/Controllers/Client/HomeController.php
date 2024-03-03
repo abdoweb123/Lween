@@ -46,6 +46,7 @@ class HomeController extends BasicController
         return view('Client.mainPage', compact('Sliders', 'Ads', 'new_arrivals', 'most_selling', 'featured', 'offers', 'Services','Brands'));
     }
 
+
     public function device($device_id,$color_id = null)
     {
         $Device = Device::where('id', $device_id)->with(['Specs', 'Accessories', 'Categories', 'Features', 'Gallery'])->firstorfail();
@@ -59,13 +60,15 @@ class HomeController extends BasicController
         return view('Client.device', compact('Device', 'wishlist'));
     }
 
+
     public function BuildYourDevice ($device_id,$color_id)
     {
         $Device = Device::where('id', $device_id)->with(['Categories', 'Gallery','Items'])->firstorfail();
 
         return view('Client.build_your_device', compact('Device'));
     }
-    
+
+
     public function report($device_id,$size_id,$color_id,$specification_id)
     {
         $Device = Device::where('id', $device_id)->with(['Categories', 'Gallery','Items'])->firstorfail();
@@ -89,6 +92,7 @@ class HomeController extends BasicController
         $pdf = \niklasravnsborg\LaravelPdf\Facades\Pdf::loadView('Client.report', $data);
         return $pdf->stream('report.pdf');
     }
+
 
     public function categories(Request $request)
     {
@@ -151,6 +155,7 @@ class HomeController extends BasicController
 
         return view('Client.categories', compact('Devices','Category'));
     }
+
 
     public function submit($delivery_id, Request $request)
     {
@@ -250,6 +255,7 @@ class HomeController extends BasicController
         return redirect()->route('Client.home');
     }
 
+
     public function confirm(Request $request)
     {
         $Cart = Cart::where('client_id', client_id())->with('Device', 'Color')->get();
@@ -257,12 +263,14 @@ class HomeController extends BasicController
         return view('Client.confirm', compact('Cart'));
     }
 
+
     public function cart()
     {
         $Cart = Cart::where('client_id', client_id())->with('Device', 'Color')->get();
 
         return view('Client.cart', compact('Cart'));
     }
+
 
     public function deleteitem()
     {
@@ -276,6 +284,7 @@ class HomeController extends BasicController
             'message' => __('trans.DeletedSuccessfully'),
         ]);
     }
+
 
     public function minus()
     {
@@ -300,6 +309,7 @@ class HomeController extends BasicController
             ]);
         }
     }
+
 
     public function plus()
     {
@@ -333,34 +343,24 @@ class HomeController extends BasicController
         ]);
     }
 
+
     public function AddToCart(Request $request)
     {
 //        return $request;
-
         $device_id = $request->device_id;
-//        $color_id = $request->color_id ?? null;
         $quantity = $request->quantity ?? 1;
         $DeviceQuantity = Device::where('id', $device_id)->select('quantity')->value('quantity');
 
         if ($DeviceQuantity > 0) {
-            $CartItem = Cart::query()->where('client_id', client_id())->where('device_id', $device_id)
-                ->where('height',$request->height)
-                ->where('width',$request->width)
-                ->where('sides_closure',$request->sides_closure)
-                ->where('front_closure',$request->front_closure)->first();
+            $CartItem = Cart::query()->where('client_id', client_id())
+                ->where('device_id', $device_id)
+                ->where('height_id',$request->height_id)
+                ->where('width_id',$request->width_id)
+                ->where('sides_closure',$request->sides_closure ? '1' : '0')
+                ->where('front_closure',$request->front_closure ? '1' : '0')->first();
             if ($CartItem) {
                 if ($CartItem->quantity < $DeviceQuantity) {
-                    return 'd';
-                    if ($CartItem->color_id == $color_id) {
-                        Cart::where('id', $CartItem->id)->increment('quantity', 1);
-                    } else {
-                        Cart::insert([
-                            'client_id' => client_id(),
-                            'device_id' => $device_id,
-                            'color_id' => $color_id,
-                            'quantity' => $quantity,
-                        ]);
-                    }
+                        Cart::where('id', $CartItem->id)->increment('quantity', $quantity);
                 } else {
                     return response()->json([
                         'success' => false,
@@ -374,15 +374,15 @@ class HomeController extends BasicController
                     'client_id' => client_id(),
                     'device_id' => $device_id,
                     'quantity' => $quantity,
-                    'height' => $request->height,
-                    'width' => $request->width,
+                    'height_id' => $request->height_id,
+                    'width_id' => $request->width_id,
                     'sides_closure' => $request->sides_closure ? '1' : '0',
                     'front_closure' => $request->front_closure ? '1' : '0',
                     'notes' => $request->notes,
                 ]);
 
                 // increase quantity in Device (product)
-                Device::query()->where('id', $device_id)->decrement('quantity', $quantity);
+//                Device::query()->where('id', $device_id)->decrement('quantity', $quantity);
             }
         } else {
             return Redirect::back()->with([
@@ -392,22 +392,62 @@ class HomeController extends BasicController
             ]);
         }
 
-        $cart_count = Cart::where('client_id', client_id())->count();
+//        $cart_count = Cart::where('client_id', client_id())->count();
 
-        return Redirect::back()->with([
-            'success' => true,
-            'type' => 'success',
-            'cart_count' => $cart_count,
-            'message' => __('trans.addedSuccessfully'),
-        ]);
-
-//        return response()->json([
-//            'success' => true,
-//            'type' => 'success',
-//            'cart_count' => $cart_count,
-//            'message' => __('trans.addedSuccessfully'),
-//        ]);
+        session()->flash('toast_message', ['type' => 'success', 'message' => __('trans.addedSuccessfully')]);
+        return redirect()->route('Client.continuePurchasingCart');
     }
+
+
+    /*** continue Buying Cart ***/
+    public function continuePurchasingCart()
+    {
+        $carts = Cart::where('client_id', client_id())->get();
+
+        // to get total price of cart elements without adding (coupon || vat)
+        $sub_total = 0;
+        foreach ($carts as $cart){
+            if ($cart->Device->HasDiscount()){
+                $sub_total += $cart->Device->RealPrice() * $cart->quantity;
+            }
+            else{
+                $sub_total += $cart->Device->Price() * $cart->quantity;
+            }
+        }
+        // To convert currency
+        convertCurrency($sub_total);
+        $sub_total = format_number($sub_total);
+
+        return view('Client.cart',compact('carts','sub_total'));
+    }
+
+
+    /*** update product_cart quantity (with ajax) ***/
+    public function updateProductCartQuantity(Request $request)
+    {
+        $cart = Cart::query()->where('client_id', client_id())
+            ->where('id',$request->input('cart_id'))->first();
+
+        $cart->update(['quantity'=>$request->input('quantity')]);
+        return response()->json([
+            'success' => true,
+            'quantity' => $cart->quantity,
+        ]);
+    }
+
+    /*** remove element from cart (with ajax) ***/
+    public function removeCartElement(Request $request)
+    {
+        $cart = Cart::query()->where('client_id', client_id())
+            ->where('id',$request->input('cart_id'))->first();
+
+        $cart->delete();
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
 
     public function ToggleWishlist(Request $request)
     {
@@ -437,6 +477,7 @@ class HomeController extends BasicController
         }
     }
 
+
     public function contact(Request $request)
     {
         Contact::create($request->all());
@@ -444,6 +485,7 @@ class HomeController extends BasicController
 
         return back();
     }
+
 
     public function getAllCategories(Request $request)
     {
@@ -491,5 +533,7 @@ class HomeController extends BasicController
         $regions = regions()->where('country_id', $countryId)->pluck('title_'.lang(), 'id');
         return response()->json($regions);
     }
+
+
 
 }//end of class

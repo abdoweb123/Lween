@@ -291,3 +291,18 @@ function Categories()
 
     return Config::get('Categories');
 }
+
+
+function convertCurrency($price)
+{
+    return format_number($price * Country()->currancy_value);
+}
+
+
+function vat()
+{
+    return $vat = Setting::query()->where('key','vat')->value('value');
+}
+
+
+
