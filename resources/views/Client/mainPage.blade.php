@@ -112,47 +112,4 @@
     @empty
     @endforelse
 
-
-   {{-- <div class="container my-5" data-aos="fade-up">
-    <div class="row">
-        <div class="col-12">
-            <h3 class="py-4 fw-bold text-center">الفساتين والبناطيل</h3>
-        </div>
-    </div>
-    <div class="row ">
-        <div class=" slider2 regular direction">
-            <div class=" p-3 ">
-                <a href="detailsPage.html">
-                    <div class="card border-0 news-card position-relative">
-                        <div class="img-card d-flex align-items-center">
-                            <img class="w-100 h-auto" src="assets_client/imgs/b1.jpeg" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="text-dark fw-semibold">
-                                <a>2301</a>
-                            </h6>
-                            <p class="card-text fs-6 mb-0 fw-bold">
-
-                                179.00 AED
-                            </p>
-                            <p class="card-text fs-6 text-secondary fw-semibold">
-
-                                متوفر بعدة حيارات
-                            </p>
-                            <button class="bg-black text-white rounded-1 fs-6 p-2 w-75 ">
-                                اضافة للسلة
-                            </button>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <button type="button" class="btn btn-outline-dark w-auto px-5 seeall-product"
-                onclick="document.location='allProducts.html'">
-            المزيد
-        </button>
-    </div>
-</div>--}}
 @stop

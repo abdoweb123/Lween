@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://C:/laragon/www/balda-main/.idea/balda-main.iml" filepath="C:/laragon/www/balda-main/.idea/balda-main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/emcan-projects.iml" filepath="$PROJECT_DIR$/.idea/emcan-projects.iml" />
     </modules>
   </component>

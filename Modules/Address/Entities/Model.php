@@ -17,4 +17,6 @@ class Model extends BaseModel
     {
         return $this->belongsTo(Region::class, 'region_id');
     }
+
+
 }

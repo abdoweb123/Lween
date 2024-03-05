@@ -47,6 +47,7 @@ class CreateOrdersTable extends Migration
 
             $table->integer('status')->default(0);
             $table->integer('follow')->default(0);
+            $table->string('notes')->nullable();
 
             $table->timestamps();
         });

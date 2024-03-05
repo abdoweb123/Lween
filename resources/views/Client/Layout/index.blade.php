@@ -23,6 +23,9 @@
     .img-card {
       height: 300px !important;
     }
+    #flag{
+      display: none !important;
+    }
 
     @if(lang() == 'en')
       body{direction: ltr}

@@ -155,6 +155,7 @@ function Deliveries()
 
     return Config::get('Deliveries');
 }
+
 function Branches()
 {
     if (! Config::get('Branches')) {
@@ -296,12 +297,6 @@ function Categories()
 function convertCurrency($price)
 {
     return format_number($price * Country()->currancy_value);
-}
-
-
-function vat()
-{
-    return $vat = Setting::query()->where('key','vat')->value('value');
 }
 
 

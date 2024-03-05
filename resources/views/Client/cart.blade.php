@@ -90,19 +90,19 @@
                             <span id="cart-item_{{$cart->id}}" data-has-discount="true" data-cart-id="{{$cart->id}}">
                                 <span class="hasDiscount">
                                     <span id="price_after_discount_{{$cart->id}}" class="hasDiscount_price cart_final_price">
-                                        {{$cart->Device->RealPrice() * $cart->quantity}}
+                                        {{ number_format($cart->Device->RealPrice() * $cart->quantity, 2) }}
                                     </span>
                                     {{Country()->currancy_code}}
                                 </span>
                                 <span class="hasDiscount_lineThrough">
                                     <span id="price_before_discount_{{$cart->id}}">
-                                         {{$cart->Device->Price() * $cart->quantity}}
+                                        {{ number_format($cart->Device->Price() * $cart->quantity, 2) }}
                                     </span>
                                     {{Country()->currancy_code}}
                                 </span>
                                 <span class="increase_quantity" id="increase_quantity_{{$cart->id}}" style="display:{{$cart->quantity>1? 'block;' : 'none;'}}">
                                     <span id="each_{{$cart->id}}">
-                                        {{$cart->Device->RealPrice() }}
+                                        {{ number_format($cart->Device->RealPrice(), 2) }}
                                     </span>
                                   {{Country()->currancy_code}} @lang('trans.each')
                                 </span>
@@ -111,13 +111,13 @@
                             <span id="cart-item_{{$cart->id}}" data-has-discount="false" data-cart-id="{{$cart->id}}">
                                 <span class="no_discount" id="no_discount_{{$cart->id}}">
                                     <span id="no_discount_price_{{$cart->id}}" class="hasDiscount_price cart_final_price">
-                                        {{$cart->Device->Price() * $cart->quantity}}
+                                      {{ number_format($cart->Device->Price() * $cart->quantity, 2) }}
                                     </span>
                                     {{Country()->currancy_code}}
                                 </span>
                                 <span class="increase_quantity" id="increase_quantity_{{$cart->id}}" style="display:{{$cart->quantity>1? 'block;' : 'none;'}}">
                                     <span class="each_{{$cart->id}}">
-                                     {{$cart->Device->Price() }}
+                                      {{ number_format($cart->Device->Price(), 2) }}
                                     </span>
                                     {{Country()->currancy_code}} @lang('trans.each')
                                 </span>
@@ -142,7 +142,7 @@
             </div>
             <div class="col-7 sub_total text-center">
                 <span class="sub_total_price">
-                    {{$sub_total}}
+                    {{ number_format($sub_total, 2) }}
                 </span>
                 &nbsp; {{Country()->currancy_code}}
             </div>
@@ -153,14 +153,14 @@
             </div>
             <div class="col-7 fw-bold total text-center">
                 <span class="total_price">
-                    {{($sub_total * (vat()/100)) + $sub_total}}
+                    {{ number_format(($sub_total * (setting('vat')/100)) + $sub_total, 2) }}
                 </span>
                 &nbsp; {{Country()->currancy_code}}
             </div>
         </div>
         <div class="row">
             <div class="col-7" style="font-size:15px;">
-                <span>@lang('trans.vat')</span> &nbsp; <span> {{vat()}} %</span>
+                <span>@lang('trans.vat')</span> &nbsp; <span> {{setting('vat')}} %</span>
             </div>
         </div>
         <div class="row p-1 my-2">
@@ -277,7 +277,7 @@
 
                                 // Update total
                                 var subTotalPriceNum = parseFloat(subTotalPrice);
-                                $('.total_price').text((subTotalPriceNum * ({{vat()}}) / 100) + subTotalPriceNum);
+                                $('.total_price').text((subTotalPriceNum * ({{setting('vat')}}) / 100) + subTotalPriceNum);
 
 
                             },
@@ -332,7 +332,7 @@
 
                         // Update total
                         var subTotalPriceNum = parseFloat(subTotalPrice);
-                        $('.total_price').text(subTotalPriceNum * ({{vat()}}) / 100 + subTotalPriceNum);
+                        $('.total_price').text(subTotalPriceNum * ({{setting('vat')}}) / 100 + subTotalPriceNum);
                     },
                     error: function(xhr, status, error) {
                         // Handle errors if needed
@@ -379,7 +379,6 @@
                                 '<p>' + '@lang('trans.total')' + ': ' + response.total + ' {{Country()->currancy_code}}' + '</p>' +
                                 '<form id="saveForm" action="{{ route('Client.chooseAddressShipping') }}" method="get">' +
                                 '@csrf' +
-                                '<input type="hidden" name="code" value="'+ response.copCode +'">' +
                                 '<button type="submit" class="btn btn-dark rounded-1 my-2">{{__('trans.purchase_follow_up')}}</button>' +
                                 '</form>' +
                                 '<a class="btn btn-outline-dark rounded-1 my-2" href="{{ route('Client.home') }}">{{__('trans.back_to_shopping')}}</a>',

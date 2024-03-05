@@ -20,6 +20,7 @@ class WhatsApp
         return $otp;
     }
 
+
     public static function SendOrder($id)
     {
         $Order = Order::with('Branch', 'Client.Country', 'Devices', 'Address')->find($id);
