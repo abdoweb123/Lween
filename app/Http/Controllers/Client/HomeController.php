@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Functions\WhatsApp;
 use App\Http\Controllers\BasicController;
+use App\Http\Requests\Client\ProfileRequest;
 use App\Mail\OrderSummary;
 use App\Models\Cart;
 use Carbon\Carbon;
@@ -265,7 +266,17 @@ class HomeController extends BasicController
         return view('Client.Purchase',compact('address'));
     }
 
-    public function storeAddress(Request $request)
+
+    public function addNewAddress($type=null)
+    {
+        if($type === 'profile'){
+            return view('Client.addNewAddress',compact('type'));
+        }
+        return view('Client.addNewAddress');
+    }
+
+
+    public function storeAddress(Request $request, $type=null)
     {
          $request->validate([
              'region_id' => ['required','integer']
@@ -290,8 +301,14 @@ class HomeController extends BasicController
         ]);
 
         session()->flash('toast_message', ['type' => 'success', 'message' => __('trans.addedSuccessfully')]);
+
+        if($type === 'profile'){
+            return redirect()->route('Client.profile');
+        }
+
         return redirect()->route('Client.chooseAddressShipping');
     }
+
 
     public function deleteAddress(Request $request)
     {
@@ -312,15 +329,46 @@ class HomeController extends BasicController
 
     }
 
-    public function editAddress($id)
+
+    public function editAddress($id, $type=null)
     {
         $address = Address::query()->findOrFail($id);
+
+        if($type === 'profile'){
+            return view('Client.editAddress',compact('address','type'));
+        }
+
         return view('Client.editAddress',compact('address'));
+    }
+
+
+    public function updateAddress(Request $request, $id, $type=null)
+    {
+        $address = Address::findOrFail($id);
+
+        $address->update([
+            'block' => $request->block,
+            'road' => $request->road,
+            'building_no' => $request->building_no,
+            'floor_no' => $request->floor_no,
+            'apartment' => $request->apartmentNo,
+            'type' => $request->apartmentType,
+            'additional_directions' => $request->additional_directions,
+        ]);
+
+        session()->flash('toast_message', ['type' => 'success', 'message' => __('trans.updatedSuccessfully')]);
+
+        if($type === 'profile'){
+            return redirect()->route('Client.profile');
+        }
+
+        return redirect()->route('Client.chooseAddressShipping');
     }
 
 
     public function paymentConfirmation(Request $request)
     {
+
         session()->put('delivery_id',$request->delivery_id);
 
         $delivery_id = session()->get('delivery_id');
@@ -329,6 +377,11 @@ class HomeController extends BasicController
         $data['address'] = Address::query()->where('client_id',client_id())->first();
 
         $data['carts'] = Cart::where('client_id', client_id())->get();
+
+        if (count($data['carts']) == 0){
+            return redirect()->back();
+        }
+
 
         // to get total price of cart elements without adding (coupon || vat)
         $result = $this->calcSubtotalCart($data['carts']);
@@ -428,25 +481,6 @@ class HomeController extends BasicController
     }
 
 
-    public function updateAddress(Request $request, $id)
-    {
-        $address = Address::findOrFail($id);
-
-        $address->update([
-            'block' => $request->block,
-            'road' => $request->road,
-            'building_no' => $request->building_no,
-            'floor_no' => $request->floor_no,
-            'apartment' => $request->apartmentNo,
-            'type' => $request->apartmentType,
-            'additional_directions' => $request->additional_directions,
-        ]);
-
-        session()->flash('toast_message', ['type' => 'success', 'message' => __('trans.updatedSuccessfully')]);
-        return redirect()->route('Client.chooseAddressShipping');
-    }
-
-    
     public function confirm(Request $request)
     {
         $Cart = Cart::where('client_id', client_id())->with('Device', 'Color')->get();

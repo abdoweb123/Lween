@@ -16,6 +16,23 @@ class Model extends BaseModel
 
     protected $table = 'orders';
 
+    /*** status ***/
+    // 0-pending 1-preparing 2-ready 3-delivered
+
+
+
+    public function orderStatus()
+    {
+        $status_en = ['pending','preparing','ready','delivered'];
+        $status_ar = ['فى الانتظار','يتم تحضيره','جاهز','تم توصيله'];
+
+        $status = lang() === 'ar' ? $status_ar : $status_en;
+
+        return isset($status[$this->status]) ? $status[$this->status] : '';
+    }
+
+
+    /*** start relations ***/
     public function Devices()
     {
         return $this->belongsToMany(Device::class, 'order_device', 'order_id', 'device_id')->withPivot('quantity', 'price', 'total', 'color_id');
@@ -44,4 +61,5 @@ class Model extends BaseModel
     {
         return $this->belongsTo(Address::class, 'address_id');
     }
-}
+
+} //end of class

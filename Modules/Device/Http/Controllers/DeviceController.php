@@ -295,11 +295,21 @@ class DeviceController extends BasicController
     }
 
     /*** To get all products in allProduct page (sortedBy) ***/
-    public function getAllProducts($searchBy = null)
+    public function getAllProducts(Request $request, $searchBy = null)
     {
-        $products = $this->deviceService->getDevicesSortBy($searchBy);
+        $products = $this->deviceService->getDevicesSortBy($request, $searchBy);
         return view('Client.allProducts',compact('products','searchBy'));
     }
+
+
+//    /*** To get all searched_products ***/
+//    public function searchProducts(Request $request)
+//    {
+//        $products = Device::query()->where('title_ar','LIKE','%'.$request->search.'%')
+//                            ->orWhere('title_en','LIKE','%'.$request->search.'%')
+//                            ->get();
+//        return view('Client.allProducts',compact('products'));
+//    }
 
 
     /*** To change product(device) to most_popular or not ***/

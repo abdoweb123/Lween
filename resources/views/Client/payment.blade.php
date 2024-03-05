@@ -50,7 +50,7 @@
         <div class="col-lg-5 col-12">
 
           <div class="row py-2">
-            <p>
+            <p class="mb-0">
               @lang('trans.devices')
             </p>
             @foreach($data['carts'] as $cart)
@@ -98,7 +98,7 @@
 
           </div>
           <div class="row py-2 ">
-            <p>
+            <p class="mb-0">
               @lang('trans.paymentMethod'):
             </p>
             @foreach(payments() as $payment)
@@ -123,7 +123,7 @@
           </div>
 
           <div class="row py-2 ">
-            <p>
+            <p class="mb-0">
               @lang('trans.notes')
             </p>
 
@@ -132,20 +132,20 @@
             <textarea class="form-control" name="notes" id="exampleFormControlTextarea1" rows="3" style="resize: none;"></textarea>
           </div>
           <div class="row py-2 ">
-            <p>
+            <p class="mb-0">
               @lang('trans.exchange_return_policy'):
             </p>
 
           </div>
           <div class="row border-1 border border-secondary fw-light p-1 rounded-1 my-2 align-items-center">
-            <p>
+            <p class="mb-0">
             @lang('trans.exchange_return_policy_desc')
             </p>
           </div>
         </div>
         <div class="col-lg-5 col-12">
           <div class="row py-2 ">
-            <p>
+            <p class="mb-0">
               @lang('trans.Order Details'):
             </p>
 
@@ -169,7 +169,7 @@
 
           </div>
           <div class="row py-2 ">
-            <p>
+            <p class="mb-0">
               @lang('trans.delivery_to'):
             </p>
           </div>
@@ -182,7 +182,7 @@
             </div>
           </div>
           <div class="row py-2 ">
-            <p>
+            <p class="mb-0">
               @lang('trans.delivery_by'):
             </p>
 

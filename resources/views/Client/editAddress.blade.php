@@ -13,7 +13,8 @@
         @lang('trans.Edit Address')
       </p>
     </div>
-    <form action="{{route('Client.updateAddress',$address->id)}}" method="post">
+    <form action="{{route('Client.updateAddress',['id'=>$address->id,'type'=>$type??''])}}" method="post">
+{{--    <form action="{{route('Client.updateAddress',$address->id)}}" method="post">--}}
       @csrf
       <div class="row gap-2 my-5 p-2 bg-light">
         <div class="col-5">
@@ -30,7 +31,7 @@
         </div>
         <div class="col-5">
           <h6>
-            @lang('trans.TheBlock')
+            @lang('trans.theBlock')
           </h6>
           <input type="text" name="block" class="form-control" value="{{$address->block}}">
         </div>

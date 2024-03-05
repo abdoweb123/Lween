@@ -3,6 +3,7 @@
 use App\Http\Controllers\Client\AddressController;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\ProfileController;
 use App\Http\Middleware\ForceSSL;
 use App\Http\Middleware\Localization;
 use Illuminate\Support\Facades\Route;
@@ -64,8 +65,10 @@ Route::group(['as' => 'Client.', 'middleware' => [Localization::class, ForceSSL:
     Route::post('resend/OTP', [ClientLoginController::class, 'Resend'])->name('resend_otp');
 
     Route::group(['middleware' => ['auth:client','ClientIsActive']], function () {
-        Route::view('/profile/{type?}', 'Client.profile')->name('profile');
-        Route::POST('/profile', [AuthController::class, 'profile'])->name('profile');
+//        Route::view('/profile/{type?}', 'Client.profile')->name('profile');
+        Route::get('/profile', [ProfileController::class, 'getProfile'])->name('profile');
+        Route::POST('/update/profile', [ProfileController::class, 'updateProfile'])->name('updateProfile');
+        Route::get('/delete/account', [ProfileController::class, 'deleteAccount'])->name('deleteAccount');
         Route::resource('/address', AddressController::class);
         Route::any('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::POST('/add-to-cart', [HomeController::class, 'AddToCart'])->name('AddToCart');
@@ -77,11 +80,11 @@ Route::group(['as' => 'Client.', 'middleware' => [Localization::class, ForceSSL:
         Route::any('checkout/choose-address-and-shipping', [HomeController::class, 'chooseAddressShipping'])->name('chooseAddressShipping');
         Route::any('/payment/and/confirmation', [HomeController::class, 'paymentConfirmation'])->name('paymentConfirmation');
         Route::POST('/place-order/', [HomeController::class, 'storeOrder'])->name('storeOrder');
-        Route::view('/add/new/address', 'Client.addNewAddress')->name('addNewAddress');
+        Route::get('/add/new/address/{type?}', [HomeController::class, 'addNewAddress'])->name('addNewAddress');
         Route::post('/delete/address', [HomeController::class, 'deleteAddress'])->name('deleteAddress');
-        Route::get('/edit/address/{id}', [HomeController::class, 'editAddress'])->name('editAddress');
-        Route::post('/update/address/{id}', [HomeController::class, 'updateAddress'])->name('updateAddress');
-        Route::post('/store/address', [HomeController::class, 'storeAddress'])->name('storeAddress');
+        Route::get('/edit/address/{id}/{type?}', [HomeController::class, 'editAddress'])->name('editAddress');
+        Route::post('/update/address/{id}/{type?}', [HomeController::class, 'updateAddress'])->name('updateAddress');
+        Route::post('/store/address/{type?}', [HomeController::class, 'storeAddress'])->name('storeAddress');
 
     });
 

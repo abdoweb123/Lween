@@ -12,6 +12,7 @@ use App\Http\Requests\Client\RegisterRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Modules\Address\Entities\Model as Address;
 use Modules\Client\Entities\Model as Client;
 use Modules\Client\Requests\PhoneLength;
 use Modules\Country\Entities\Country;
@@ -79,20 +80,6 @@ class AuthController extends BasicController
         return redirect()->route("Client.otp", encrypt( $client->id));
     }
 
-
-    public function profile(ProfileRequest $request)
-    {
-        $client_id = client_id();
-        Client::where('id', auth('client')->id())->update([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'password' => bcrypt($request->get('password')),
-        ]);
-        DB::table('wishlist')->where('client_id', $client_id)->update(['client_id' => auth('client')->id()]);
-        toast(__('trans.updatedSuccessfully'), 'success');
-
-        return redirect()->route('Client.profile');
-    }
 
     public function forget(ForgetRequest $request)
     {

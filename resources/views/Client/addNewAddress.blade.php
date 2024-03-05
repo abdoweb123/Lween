@@ -20,7 +20,7 @@
 
 
 
-    <form action="{{route('Client.storeAddress')}}" method="post">
+    <form action="{{route('Client.storeAddress',$type?? '')}}" method="post">
       @csrf
       <div class="row gap-2 my-5 p-2 bg-light">
         <div class="col-5">
@@ -38,7 +38,7 @@
         </div>
         <div class="col-5">
           <h6>
-            @lang('trans.TheBlock')
+            @lang('trans.theBlock')
           </h6>
           <input type="text" name="block" class="form-control">
         </div>
@@ -82,8 +82,15 @@
       <div class="row my-5">
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
           <button class="btn btn-dark w-auto px-5" type="submit" href="Purchase.html">@lang('trans.next')</button>
-          <button class="btn btn-outline-dark w-auto px-5" type="button"
-            onclick="document.location='{{ route('Client.chooseAddressShipping') }}'">@lang('trans.cancel')</button>
+          @if(isset($type) && $type == 'profile')
+            <button class="btn btn-outline-dark w-auto px-5" type="button"
+                    onclick="document.location='{{ route('Client.profile') }}'">@lang('trans.cancel')
+            </button>
+          @else
+            <button class="btn btn-outline-dark w-auto px-5" type="button"
+                    onclick="document.location='{{ route('Client.chooseAddressShipping') }}'">@lang('trans.cancel')
+            </button>
+          @endif
         </div>
       </div>
     </form>

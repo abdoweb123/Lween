@@ -182,7 +182,6 @@ function Countries()
     return Config::get('Countries');
 }
 
-
 function Country($id = NULL)
 {
     if(request()->route()->getName() == 'Client.submit'){
@@ -294,10 +293,12 @@ function Categories()
 }
 
 
+
 function convertCurrency($price)
 {
     return format_number($price * Country()->currancy_value);
 }
+
 
 
 

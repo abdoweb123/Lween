@@ -44,8 +44,9 @@
 
   <div class="js-container" style="top:0px !important;"></div>
   </div>
-  <div class="container section-top my-5 " style="min-height: 60vh;">
-    <div class="row gap-5 justify-content-center">
+  @if(count($carts) > 0)
+      <div class="container section-top my-5 " style="min-height: 60vh;">
+        <div class="row gap-5 justify-content-center">
         <div class="col-lg-7 col-12 ">
            <h3 class="py-2 fw-bold">
             @lang('trans.products')
@@ -128,42 +129,42 @@
             @endforeach
         </div>
         <div class="col-lg-4 col-12">
-      <h3 class="py-2 fw-bold">
-        @lang('trans.invoice_details')
-       </h3>
-        <div class="row  p-1 my-2">
-            <div class="col-7">@lang('trans.description')</div>
-            <div class="col-5">@lang('trans.value')</div>
-        </div>
+            <h3 class="py-2 fw-bold">
+                @lang('trans.invoice_details')
+            </h3>
+            <div class="row  p-1 my-2">
+                <div class="col-7">@lang('trans.description')</div>
+                <div class="col-5">@lang('trans.value')</div>
+            </div>
 
-        <div class="row border-1 border border-secondary p-1 rounded-1 my-2 align-items-center">
-            <div class="col-5">
-                @lang('trans.sub_total')
+            <div class="row border-1 border border-secondary p-1 rounded-1 my-2 align-items-center">
+                <div class="col-5">
+                    @lang('trans.sub_total')
+                </div>
+                <div class="col-7 sub_total text-center">
+                    <span class="sub_total_price">
+                        {{ number_format($sub_total, 2) }}
+                    </span>
+                    &nbsp; {{Country()->currancy_code}}
+                </div>
             </div>
-            <div class="col-7 sub_total text-center">
-                <span class="sub_total_price">
-                    {{ number_format($sub_total, 2) }}
-                </span>
-                &nbsp; {{Country()->currancy_code}}
+            <div class="row border-1 border border-secondary p-1 rounded-1 my-2 align-items-center">
+                <div class="col-5">
+                    @lang('trans.total')
+                </div>
+                <div class="col-7 fw-bold total text-center">
+                    <span class="total_price">
+                        {{ number_format(($sub_total * (setting('vat')/100)) + $sub_total, 2) }}
+                    </span>
+                    &nbsp; {{Country()->currancy_code}}
+                </div>
             </div>
-        </div>
-        <div class="row border-1 border border-secondary p-1 rounded-1 my-2 align-items-center">
-            <div class="col-5">
-                @lang('trans.total')
+            <div class="row">
+                <div class="col-7" style="font-size:15px;">
+                    <span>@lang('trans.vat')</span> &nbsp; <span> {{setting('vat')}} %</span>
+                </div>
             </div>
-            <div class="col-7 fw-bold total text-center">
-                <span class="total_price">
-                    {{ number_format(($sub_total * (setting('vat')/100)) + $sub_total, 2) }}
-                </span>
-                &nbsp; {{Country()->currancy_code}}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-7" style="font-size:15px;">
-                <span>@lang('trans.vat')</span> &nbsp; <span> {{setting('vat')}} %</span>
-            </div>
-        </div>
-        <div class="row p-1 my-2">
+            <div class="row p-1 my-2">
             <div class="m-0 p-0 row">
                 <label for="coupon" class="py-2" >@lang('trans.coupon') </label>
                 <div class="col align-items-center">
@@ -185,10 +186,23 @@
                 <a class="btn btn-outline-dark rounded-1 my-2" href="{{route('Client.home')}}" >@lang('trans.back_to_shopping') </a>
             </form>
         </div>
-
+        </div>
     </div>
-    </div>
-  </div>
+      </div>
+  @else
+      <div class="cart-empty pt-5 pbb-5 my-5">
+          <div class="d-flex flex-column align-items-center">
+              <i class="fa-solid fa-cart-shopping" style="font-size: 70px"></i>
+            </span>
+            <h2 class="mt-3" style="font-weight:700; font-size:20px;">@lang('trans.cart_empty')</h2>
+            <div class="mt-3">
+              <a href="{{route('Client.home')}}" class="btn btn-outline-dark btn-lg btn-block">
+                  @lang('trans.back_to_shopping')
+              </a>
+            </div>
+          </div>
+      </div>
+  @endif
 @stop
 
 
@@ -277,7 +291,7 @@
 
                                 // Update total
                                 var subTotalPriceNum = parseFloat(subTotalPrice);
-                                $('.total_price').text((subTotalPriceNum * ({{setting('vat')}}) / 100) + subTotalPriceNum);
+                                $('.total_price').text(((subTotalPriceNum * ({{setting('vat')}}) / 100) + subTotalPriceNum).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
 
                             },

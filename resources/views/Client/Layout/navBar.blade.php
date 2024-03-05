@@ -61,8 +61,9 @@
     <a type="button" class="close-div position-absolute">
       <i class="fa-solid fa-xmark  text-white"></i>
     </a>
-    <form class="h-100 w-100 d-flex justify-content-center align-items-center">
-      <input type="text" class="nosubmit search-input border-bottom rounded-0 border-3" placeholder="ابحث">
+    <form action="{{route('Client.allProducts')}}" class="h-100 w-100 d-flex justify-content-center align-items-center">
+      @csrf
+      <input type="text" name="search" class="nosubmit search-input border-bottom rounded-0 border-3" placeholder="@lang('trans.search')">
     </form>
   </div>
 
