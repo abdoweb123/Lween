@@ -21,7 +21,7 @@ class CreateCartTable extends Migration
 
 
             $table->unsignedBigInteger('device_id')->nullable();
-            $table->foreign('device_id')->nullable()->on('devices')->references('id')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('device_id')->nullable()->on('products')->references('id')->onUpdate('cascade')->onDelete('cascade');
 
             $table->smallInteger('quantity');
 

@@ -3,7 +3,7 @@
 namespace Modules\Category\Entities;
 
 use App\Models\BaseModel;
-use Modules\Device\Entities\Device;
+use Modules\Product\Entities\Product;
 
 class Model extends BaseModel
 {
@@ -21,9 +21,9 @@ class Model extends BaseModel
         return $this->hasMany(Model::class, 'parent_id')->OrderByArrangement();
     }
 
-    public function Devices()
+    public function Products()
     {
-        return $this->belongsToMany(Device::class, 'device_category', 'category_id', 'device_id');
+        return $this->belongsToMany(Product::class, 'product_category', 'category_id', 'product_id');
     }
 
     public static function boot()

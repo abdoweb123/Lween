@@ -141,11 +141,14 @@
                   @if($address)
                   <div id="address_{{$address->id}}" class="col-lg-3 col-8 py-3 position-relative" data-aos="flip-left" data-aos-duration="1000">
                     <div class=" position-absolute d-icon">
+                      @if(count($address->Orders) == 0)
                       <span class="p-2">
                           <a href="#delete" onclick="confirmDeleteAddress({{$address->id}})">
                             <i class="fa-solid fa-trash"></i>
                           </a>
                       </span>
+                      @endif
+
                       <span class="p-2">
                         <a href="{{route('Client.editAddress',['id'=>$address->id,'type'=>'profile'])}}">
                            <i class="fa-solid fa-pen"></i>
@@ -181,7 +184,7 @@
                         <div id="flush-collapseOne_{{$order->id}}" class="accordion-collapse collapse"
                              data-bs-parent="#accordionFlushExample_{{$order->id}}">
                           <div class="accordion-body">
-                            <table class="table ">
+                            <table class="table">
                               <thead class="bg-light">
                               <tr>
                                 <th scope="col">@lang('trans.order_number')</th>
@@ -205,18 +208,18 @@
                               </tr>
                               </tbody>
                             </table>
-                            @forelse($order->Devices as $device)
+                            @forelse($order->Products as $product)
                               <div class="p-2 my-4 shadow">
                               <div class="row justify-content-center align-items-center">
                                 <div class="col-12 col-md-5">
                                   <div class="row justify-content-center align-items-center">
                                     <div class="col-6">
-                                      <img src="{{asset($device->header)}}" class="img-fluid w-75" alt="abaia">
+                                      <img src="{{asset($product->header)}}" class="img-fluid w-75" alt="abaia">
                                     </div>
                                     <div class="col-6">
                                       <div class="">
                                         <span class="font-weight-bold d-block mb-3">@lang('trans.Product Name')</span>
-                                        <span style="font-size: 13px">{{$device['title_'.lang()]}}</span>
+                                        <span style="font-size: 13px">{{$product['title_'.lang()]}}</span>
                                       </div>
                                     </div>
                                   </div>
@@ -225,15 +228,15 @@
                                   <div class="row mt-2">
                                     <div class="col-4">
                                       <span class="font-weight-bold d-block mb-3">@lang('trans.quantity')</span>
-                                      <span style="font-size:14px">{{$device->pivot->quantity}}</span>
+                                      <span style="font-size:14px">{{$product->pivot->quantity}}</span>
                                     </div>
                                     <div class="col-4">
                                       <span class="font-weight-bold d-block mb-3">@lang('trans.price')</span>
-                                      <span style="font-size:14px">{{number_format($device->pivot->price * Country()->currancy_value,2)}} {{Country()->currancy_code}}</span>
+                                      <span style="font-size:14px">{{number_format($product->pivot->price * Country()->currancy_value,2)}} {{Country()->currancy_code}}</span>
                                     </div>
                                     <div class="col-4">
                                       <span class="font-weight-bold d-block mb-3">@lang('trans.total')</span>
-                                      <span style="font-size:14px">{{number_format($device->pivot->total * Country()->currancy_value,2)}} {{Country()->currancy_code}}</span>
+                                      <span style="font-size:14px">{{number_format($product->pivot->total * Country()->currancy_value,2)}} {{Country()->currancy_code}}</span>
                                     </div>
                                   </div>
                                 </div>

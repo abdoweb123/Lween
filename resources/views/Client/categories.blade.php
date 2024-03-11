@@ -14,7 +14,7 @@
     <div class="row  g-5 ">
       @foreach($categories as $category)
         <div class="col-lg-3 col-6 my-3">
-        <a href="{{route('Client.category.devices',$category->id)}}">
+        <a href="{{route('Client.category.products',$category->id)}}">
           <div class="position-relative item-container">
             <div class="item overflow-hidden position-absolute  ">
 

@@ -24,7 +24,7 @@
     <meta name="twitter:description" content="{{ strip_tags(setting('desc')) }}">
     <meta name="twitter:site" content="@{{ setting('title_'.lang()) }}">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=product-width, initial-scale=1.0">
 
 
     <link rel="shortcut icon" href="{{ asset('login_assets/assets_' .lang() . '/images/favicon_1.ico') }}">

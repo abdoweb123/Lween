@@ -8,7 +8,7 @@
         <a href="{{ route('admin.ads.create') }}" class="main-btn">@lang('trans.add_new')</a>
     </div>
     <div class="my-2 col-6 text-sm-end">
-        <button type="button" id="DeleteSelected" onclick="DeleteSelected('f_a_q_s')" class="btn btn-danger" disabled>@lang('trans.Delete_Selected')</button>
+        <button type="button" id="DeleteSelected" onclick="DeleteSelected('ads')" class="btn btn-danger" disabled>@lang('trans.Delete_Selected')</button>
     </div>
 </div>
 <table class="table table-bordered data-table" >

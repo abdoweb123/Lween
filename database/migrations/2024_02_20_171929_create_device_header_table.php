@@ -22,7 +22,7 @@ class CreateDeviceHeaderTable extends Migration
             $table->timestamps();
             
             $table->foreign('color_id', 'device_header_color_id_foreign')->references('id')->on('colors')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('device_id', 'device_header_device_id_foreign')->references('id')->on('devices')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('device_id', 'device_header_device_id_foreign')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

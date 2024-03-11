@@ -5,19 +5,84 @@
 @stop
 
 
-@section('style')
+@section('link')
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 
+@stop
+
+@section('style')
+    <style>
+        .carousel-inner .carousel-item-right.active,
+        .carousel-inner .carousel-item-next {
+            transform: translateX(33.33%);
+        }
+
+        .carousel-inner .carousel-item-left.active,
+        .carousel-inner .carousel-item-prev {
+            transform: translateX(-33.33%)
+        }
+
+        .carousel-inner .carousel-item-right,
+        .carousel-inner .carousel-item-left{
+            transform: translateX(0);
+        }
+
+        .a_product_details:hover{
+            text-decoration: none;
+        }
+    </style>
 @stop
 
 @section('content')
 
 {{--{{'gsffs'.App::setLocale(session()->get('locale'))}}--}}
 
-    <div class="container-fluid mb-5 section-top">
-        <div class="row ">
-            <img class="w-100 p-0" src="{{asset('assets_client/imgs/header.png')}}">
+
+
+<!-- Full Page Image Background Carousel Header -->
+<div class="container-fluid mb-5 section-top p-0">
+    <div class="">
+        <div class="main_header position-relative ltr">
+            <div id="sliders" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" style="">
+                    @foreach ($Sliders as $key => $slider)
+                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                            <div class="disc position-relative" style="rgba(0, 0, 0, .05);">
+                                <img style="width:100%;" src="{{asset($slider->file)}}" class="img-fluid" alt="image">
+                                @if( $slider->title() )
+                                    <div style="background: rgba(0,0,0,0.6);" class="carousel-caption d-none d-md-block" style="text-align: center; z-index: 99;">
+                                        <h1 class="more_bold" style="color:white;">{{ $slider->title() }}</h1>
+                                        <p class="teny_font" style="color:white; font-size:20px;">{!! $slider->desc() !!}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                @if ($Sliders && count($Sliders) > 1)
+                    <div class="container">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#sliders" data-bs-slide="prev">
+                            <i class="icon-chevron-left1 main_color h1"></i>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#sliders" data-bs-slide="next">
+                            <i class="icon-chevron-right1 main_color h1"></i>
+                        </button>
+                    </div>
+                @endif
+            </div>
+
         </div>
     </div>
+</div>
+
+
+{{--    <div class="container-fluid mb-5 section-top">--}}
+{{--        <div class="row ">--}}
+{{--            <img class="w-100 p-0" src="{{asset('assets_client/imgs/header.png')}}">--}}
+{{--        </div>--}}
+{{--    </div>--}}
+
     <div class="container my-5">
         <div class="row">
             <div class="col-12 ">
@@ -34,7 +99,7 @@
         <div class="row regular">
             @forelse($Categories_regular as $Category)
                 <div class="col" data-aos="zoom-in-up" data-aos-duration="700">
-                    <a href="{{route('Client.category.devices',$Category->id)}}">
+                    <a href="{{route('Client.category.products',$Category->id)}}">
                         <img class="w-100" src="{{$Category->image}}">
                     </a>
                 </div>
@@ -42,11 +107,49 @@
             @endforelse
         </div>
     </div>
-    <div class="container-fluid my-5">
-        <div class="row">
-            <img class="p-0" src="{{asset('assets_client/imgs/bag4.jpg')}}" style="height:600px"/>
+
+<div class="container-fluid mb-5 section-top p-0">
+    <div class="">
+        <div class="main_header position-relative ltr">
+            <div id="sliders" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" style="">
+                    @foreach ($Ads as $key => $Ad)
+                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                            <div class="disc position-relative" style="rgba(0, 0, 0, .05);">
+                                <img style="width:100%;" src="{{asset($Ad->file)}}" class="img-fluid" alt="image">
+                                @if( $Ad->title() )
+                                    <div style="background: rgba(0,0,0,0.6);" class="carousel-caption d-none d-md-block" style="text-align: center; z-index: 99;">
+                                        <h1 class="more_bold" style="color:white;">{{ $Ad->title() }}</h1>
+                                        <p class="teny_font" style="color:white; font-size:20px;">{!! $Ad->desc() !!}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                @if ($Ads && count($Ads) > 1)
+                    <div class="container">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#sliders" data-bs-slide="prev">
+                            <i class="icon-chevron-left1 main_color h1"></i>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#sliders" data-bs-slide="next">
+                            <i class="icon-chevron-right1 main_color h1"></i>
+                        </button>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
+</div>
+
+{{--    <div class="container my-5">--}}
+{{--        <div class="row">--}}
+{{--            <a href="{{$Ad->link?? '#'}}">--}}
+{{--                <img class="p-0" src="{{asset($Ad->file)}}" style="height:600px; width:100%"/>--}}
+{{--            </a>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
     @php
         $Categories_mid = Categories()->take(2);
@@ -62,9 +165,9 @@
             </div>
             <div class="row ">
                 <div class="slider2 regular direction">
-                    @foreach($Category->devices as $key=>$product)
+                    @forelse($Category->Products as $key=>$product)
                         <div class="card border-0 news-card position-relative">
-                            <a href="{{ route('Client.devices.details', $product->id) }}">
+                            <a href="{{ route('Client.products.details', $product->id) }}" class="a_product_details">
                                 <div class="img-card d-flex align-items-center">
                                     <img class="w-100 h-auto" src="{{ asset($product->header) }}" />
                                 </div>
@@ -90,8 +193,8 @@
                                 </div>
                             </a>
                         </div>
-
-                    @endforeach
+                    @empty
+                    @endforelse
 
                 </div>
             </div>
@@ -103,7 +206,7 @@
                     </button>
                 @else
                     <button type="button" class="btn btn-outline-dark w-auto seeall-product"
-                            onclick="document.location='{{route('Client.category.devices',$Category->id)}}'">
+                            onclick="document.location='{{route('Client.category.products',$Category->id)}}'">
                         @lang('trans.more')
                     </button>
                 @endif
@@ -113,3 +216,5 @@
     @endforelse
 
 @stop
+
+

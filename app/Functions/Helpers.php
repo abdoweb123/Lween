@@ -4,21 +4,15 @@ use App\Models\Cart;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Modules\Branch\Entities\Model as Branch;
-use Modules\Color\Entities\Model as Color;
 use Modules\Country\Entities\Country;
 use Modules\Country\Entities\Region;
 use Modules\Delivery\Entities\Model as Delivery;
-use Modules\Device\Entities\Device as Device;
+use Modules\Product\Entities\Product as Product;
 use Modules\FAQ\Entities\Model as FAQ;
-use Modules\Memory\Entities\Model as Memory;
 use Modules\Order\Entities\Model as Order;
-use Modules\OS\Entities\Model as OS;
 use Modules\Payment\Entities\Model as Payment;
-use Modules\Processor\Entities\Model as Processor;
 use Modules\Setting\Entities\Model as Setting;
-use Modules\Size\Entities\Model as Size;
-use Modules\Specs\Entities\Model as Specs;
-use Modules\Storage\Entities\Model as Storage;
+
 
 function format_number($number)
 {
@@ -55,34 +49,11 @@ function lang($lang = null)
     }
 }
 
-function OS()
-{
-    if (! Config::get('OS')) {
-        Config::set('OS', OS::Active()->get());
-    }
 
-    return Config::get('OS');
-}
-function Processors()
-{
-    if (! Config::get('Processors')) {
-        Config::set('Processors', Processor::Active()->get());
-    }
-
-    return Config::get('Processors');
-}
-function Specs()
-{
-    if (! Config::get('Specs')) {
-        Config::set('Specs', Specs::Active()->get());
-    }
-
-    return Config::get('Specs');
-}
 function CurrentOrders()
 {
     if (! Config::get('CurrentOrders')) {
-        Config::set('CurrentOrders', Order::latest()->with('Branch', 'Client.Country', 'Devices', 'Address')->where('status', 0)->get());
+        Config::set('CurrentOrders', Order::latest()->with('Branch', 'Client.Country', 'Products', 'Address')->where('status', 0)->get());
     }
 
     return Config::get('CurrentOrders');
@@ -90,7 +61,7 @@ function CurrentOrders()
 function PreviousOrders()
 {
     if (! Config::get('PreviousOrders')) {
-        Config::set('PreviousOrders', Order::latest()->with('Branch', 'Client.Country', 'Devices', 'Address')->where('status', 1)->get());
+        Config::set('PreviousOrders', Order::latest()->with('Branch', 'Client.Country', 'Products', 'Address')->where('status', 1)->get());
     }
 
     return Config::get('PreviousOrders');
@@ -98,19 +69,13 @@ function PreviousOrders()
 function Wishlist()
 {
     if (! Config::get('Wishlist')) {
-        Config::set('Wishlist', Device::whereIn('id', DB::table('wishlist')->where('client_id', client_id())->pluck('device_id'))->get());
+        Config::set('Wishlist', Product::whereIn('id', DB::table('wishlist')->where('client_id', client_id())->pluck('product_id'))->get());
     }
 
     return Config::get('Wishlist');
 }
-function Storages()
-{
-    if (! Config::get('Storages')) {
-        Config::set('Storages', Storage::Active()->get());
-    }
 
-    return Config::get('Storages');
-}
+
 function FAQ()
 {
     if (! Config::get('FAQ')) {
@@ -119,34 +84,9 @@ function FAQ()
 
     return Config::get('FAQ');
 }
-function Memories()
-{
-    if (! Config::get('Memories')) {
-        Config::set('Memories', Memory::Active()->get());
-    }
 
-    return Config::get('Memories');
-}
-function Colors()
-{
-    if (! Config::get('Colors')) {
-        Config::set('Colors', Color::Active()->get());
-    }
 
-    return Config::get('Colors');
-}
-function Color($id)
-{
-    return Color::Active()->find($id);
-}
-function Sizes()
-{
-    if (! Config::get('Sizes')) {
-        Config::set('Sizes', Size::Active()->get());
-    }
 
-    return Config::get('Sizes');
-}
 function Deliveries()
 {
     if (! Config::get('Deliveries')) {
@@ -284,7 +224,7 @@ function Categories()
 {
     if (! Config::get('Categories')) {
 
-       return  $Categories = \Modules\Category\Entities\Model::Active()->whereHas('Devices')->with(['Devices'=>function($query){
+       return  $Categories = \Modules\Category\Entities\Model::Active()->whereHas('Products')->with(['Products'=>function($query){
             $query->Active();
         }])->get();
     }

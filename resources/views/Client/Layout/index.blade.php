@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" >
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=product-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="{{asset('assets_client/css/bootstrap.min.css')}}">
@@ -26,6 +26,18 @@
     #flag{
       display: none !important;
     }
+
+    .social li:nth-child(3) a:before{
+      background-color: yellow;
+    }
+
+    .social li:nth-child(4) a:before{
+      background: linear-gradient(
+              to right,
+              #833ab4,#fd1d1d,#fcb045
+      );
+    }
+     a .fa-snapchat{color:black !important;}
 
     @if(lang() == 'en')
       body{direction: ltr}

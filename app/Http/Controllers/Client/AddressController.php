@@ -11,87 +11,112 @@ use Modules\Country\Entities\Region;
 
 class AddressController extends BasicController
 {
-    public function index()
+
+    public function chooseAddressShipping(Request $request)
     {
-        return view('Client.address.index');
+        $address = Address::query()->where('client_id',client_id())->first();
+        return view('Client.Purchase',compact('address'));
     }
 
-    public function create()
-    {
-        $regions = Region::orderBy('title_'.app()->getLocale())->get();
-        $country_id = auth('client')->user()->country_id;
 
-        return view('Client.address.create', compact('regions', 'country_id'));
+    public function addNewAddress($type=null)
+    {
+        if($type === 'profile'){
+            return view('Client.addNewAddress',compact('type'));
+        }
+        return view('Client.addNewAddress');
     }
 
-    public function store(AddressRequest $request)
-    {
 
-        DB::table('addresses')->insert([
-            'client_id' => auth('client')->id(),
+    public function storeAddress(Request $request, $type=null)
+    {
+        $request->validate([
+            'region_id' => ['required','integer']
+        ]);
+
+        $checkAddress = Address::where('client_id',client_id())->first();
+
+        if ($checkAddress){
+            $checkAddress->delete();
+        }
+
+        $Address = Address::create([
+            'client_id' => Client_id(),
             'region_id' => $request->region_id,
             'block' => $request->block,
             'road' => $request->road,
             'building_no' => $request->building_no,
             'floor_no' => $request->floor_no,
-            'apartment' => $request->apartment,
-            'type' => $request->type,
-            'lat' => $request->lat,
-            'long' => $request->long,
+            'apartment' => $request->apartmentNo,
+            'type' => $request->apartmentType,
             'additional_directions' => $request->additional_directions,
         ]);
 
-        alert()->success(__('trans.addedSuccessfully'));
+        session()->flash('toast_message', ['type' => 'success', 'message' => __('trans.addedSuccessfully')]);
 
-        return redirect()->route('client.profile', ['type' => 'addresses']);
-    }
-
-    public function edit($id)
-    {
-        $address = Address::findOrFail($id);
-        $regions = Region::orderBy('title_'.app()->getLocale())->get();
-
-        return view('Client.address.edit', compact('address', 'regions'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $address = Address::findOrFail($id);
-        $address->region_id = $request->region_id;
-        $address->block = $request->block;
-        $address->road = $request->road;
-        $address->building_no = $request->building_no;
-        $address->floor_no = $request->floor_no;
-        $address->apartment = $request->apartment;
-        $address->type = $request->type;
-        $address->lat = $request->lat;
-        $address->long = $request->long;
-        $address->additional_directions = $request->additional_directions;
-
-        $address->save();
-        if ($request->url == '1') {
-            alert()->success(__('trans.updatedSuccessfully'));
-
-            return redirect()->route('address.index');
-        } else {
-            alert()->success(__('trans.updatedSuccessfully'));
-
-            return redirect()->route('client.profile', 'address');
+        if($type === 'profile'){
+            return redirect()->route('Client.profile');
         }
+
+        return redirect()->route('Client.chooseAddressShipping');
     }
 
-    public function destroy($id)
+
+    public function editAddress($id, $type=null)
+    {
+        $address = Address::query()->findOrFail($id);
+
+        if($type === 'profile'){
+            return view('Client.editAddress',compact('address','type'));
+        }
+
+        return view('Client.editAddress',compact('address'));
+    }
+
+
+    public function updateAddress(Request $request, $id, $type=null)
     {
         $address = Address::findOrFail($id);
-        try {
+
+        $address->update([
+            'block' => $request->block,
+            'road' => $request->road,
+            'building_no' => $request->building_no,
+            'floor_no' => $request->floor_no,
+            'apartment' => $request->apartmentNo,
+            'type' => $request->apartmentType,
+            'additional_directions' => $request->additional_directions,
+        ]);
+
+        session()->flash('toast_message', ['type' => 'success', 'message' => __('trans.updatedSuccessfully')]);
+
+        if($type === 'profile'){
+            return redirect()->route('Client.profile');
+        }
+
+        return redirect()->route('Client.chooseAddressShipping');
+    }
+
+
+    public function deleteAddress(Request $request)
+    {
+        $addressId = $request->input('address_id');
+
+        $address = Address::query()->find($addressId);
+        if ($address){
             $address->delete();
-            alert()->success(__('trans.DeletedSuccessfully'));
-
-            return redirect()->back();
-        } catch (\Exception $e) {
-            alert()->danger(__('trans.cantDeleteAddress'));
-
-            return redirect()->back();
+            return response()->json([
+                'message' => __('trans.DeletedSuccessfully')
+            ]);
         }
+        else{
+            return response()->json([
+                'message' => __('trans.somethingWrong')
+            ]);
+        }
+
     }
-}
+
+
+} //end of class
+

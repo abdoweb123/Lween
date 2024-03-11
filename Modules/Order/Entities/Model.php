@@ -8,7 +8,7 @@ use Modules\Branch\Entities\Model as Branch;
 use Modules\Client\Entities\Model as Client;
 use Modules\Delivery\Entities\Model as Delivery;
 use Modules\Payment\Entities\Model as Payment;
-use Modules\Device\Entities\Device;
+use Modules\Product\Entities\Product;
 
 class Model extends BaseModel
 {
@@ -17,14 +17,14 @@ class Model extends BaseModel
     protected $table = 'orders';
 
     /*** status ***/
-    // 0-pending 1-preparing 2-ready 3-delivered
+    // 0-pending 1-preparing 2-ready 3-delivered 4-refused
 
 
 
     public function orderStatus()
     {
-        $status_en = ['pending','preparing','ready','delivered'];
-        $status_ar = ['فى الانتظار','يتم تحضيره','جاهز','تم توصيله'];
+        $status_en = ['pending','preparing','ready','delivered','refused'];
+        $status_ar = ['قيد الانتظار','يتم التحضير','جاهز','تم التوصيل','مرفوض'];
 
         $status = lang() === 'ar' ? $status_ar : $status_en;
 
@@ -33,9 +33,9 @@ class Model extends BaseModel
 
 
     /*** start relations ***/
-    public function Devices()
+    public function Products()
     {
-        return $this->belongsToMany(Device::class, 'order_device', 'order_id', 'device_id')->withPivot('quantity', 'price', 'total', 'color_id');
+        return $this->belongsToMany(Product::class, 'order_product', 'order_id', 'product_id')->withPivot('quantity', 'price', 'total');
     }
 
     public function Delivery()

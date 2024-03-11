@@ -18,8 +18,8 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td><input type="checkbox" @checked($Branch->categories->pluck('id')->contains($sub_category->id)) class="DTcheckbox" value="{{ $sub_category->id }}" name="categories[]"></td>
-                    <td><a href="{{ route('admin.branch.category.devices',['branch' => $Branch ,'category' => $sub_category ]) }}">{{ $sub_category->title_ar }}</a></td>
-                    <td><a href="{{ route('admin.branch.category.devices',['branch' => $Branch ,'category' => $sub_category ]) }}">{{ $sub_category->title_en }}</a></td>
+                    <td><a href="{{ route('admin.branch.category.products',['branch' => $Branch ,'category' => $sub_category ]) }}">{{ $sub_category->title_ar }}</a></td>
+                    <td><a href="{{ route('admin.branch.category.products',['branch' => $Branch ,'category' => $sub_category ]) }}">{{ $sub_category->title_en }}</a></td>
                 </tr>
             @endforeach
         </tbody>

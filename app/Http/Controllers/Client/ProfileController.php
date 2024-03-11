@@ -53,12 +53,6 @@ class ProfileController extends BasicController
         $orders = Order::query()->where('client_id',$client->id)->get();
         $address = Address::query()->where('client_id',client_id())->first();
 
-//        foreach ($orders as $order){
-//            foreach ($order->Devices as $device){
-//                return$device->pivot;
-//            }
-//        }
-
         return view('Client.profile',compact('client','address','orders'));
     }
 

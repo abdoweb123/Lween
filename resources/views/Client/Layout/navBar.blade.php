@@ -6,7 +6,6 @@
         <i class="fa-solid fa-bars text-white"></i>
       </a>
       <a class="navbar-brand py-2" href="{{route('Client.home')}}">
-
         <img width="150" src="{{asset(setting('logo'))}}" style="width:55px; height:55px"/>
       </a>
 
@@ -37,7 +36,7 @@
 
           @forelse($Categories_navbar as $Category)
             <li class="nav-item ">
-              <a class="nav-link" href="{{route('Client.category.devices',$Category->id)}}" onclick="setActiveLink(this)">{{$Category['title_'.lang()]}}</a>
+              <a class="nav-link" href="{{route('Client.category.products',$Category->id)}}" onclick="setActiveLink(this)">{{$Category['title_'.lang()]}}</a>
             </li>
           @empty
           @endforelse

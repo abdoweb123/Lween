@@ -51,7 +51,7 @@
 
           <div class="row py-2">
             <p class="mb-0">
-              @lang('trans.devices')
+              @lang('trans.products')
             </p>
             @foreach($data['carts'] as $cart)
               <div class="col-12">
@@ -63,20 +63,20 @@
                             <span class="icon-delete">{{$cart->quantity}}</span>
                         </span>
                       <div class="flex-shrink-0 rounded-0">
-                        <img class="w-100 h-100" src="{{asset($cart->Device->header)}}" alt="...">
+                        <img class="w-100 h-100" src="{{asset($cart->Product->header)}}" alt="...">
                       </div>
                       <div class="flex-grow-1 p-3  fw-bold">
-                        #{{$cart->device_id}} - {{$cart->Height->title}} - {{$cart->Width['title_'.lang()]}}
+                        #{{$cart->product_id}} - {{$cart->Height->title}} - {{$cart->Width['title_'.lang()]}}
                       </div>
                     </div>
                   </div>
 
                   <div class="col-lg-4 col-4 text-price">
-                    @if($cart->Device->HasDiscount())
+                    @if($cart->Product->HasDiscount())
                       <span id="cart-item_{{$cart->id}}" data-has-discount="true" data-cart-id="{{$cart->id}}">
                           <span class="hasDiscount">
                               <span id="price_after_discount_{{$cart->id}}" class="hasDiscount_price cart_final_price">
-                                  {{$cart->Device->RealPrice() * $cart->quantity}}
+                                  {{$cart->Product->RealPrice() * $cart->quantity}}
                               </span>
                               {{Country()->currancy_code}}
                           </span>
@@ -85,7 +85,7 @@
                       <span id="cart-item_{{$cart->id}}" data-has-discount="false" data-cart-id="{{$cart->id}}">
                           <span class="no_discount" id="no_discount_{{$cart->id}}">
                               <span id="no_discount_price_{{$cart->id}}" class="hasDiscount_price cart_final_price">
-                                  {{$cart->Device->Price() * $cart->quantity}}
+                                  {{$cart->Product->Price() * $cart->quantity}}
                               </span>
                               {{Country()->currancy_code}}
                           </span>
@@ -164,7 +164,7 @@
               @lang('trans.total')
             </div>
             <div class="col-5 fw-bold">
-              {{ number_format(($data['total'] + ($data['address']->Region->delivery_cost ?? 0) * Country()->currancy_value), 2) }} {{Country()->currancy_code}}
+              {{ number_format(($data['total'] + ($data['delivery']->id == 1 ? ($data['address']->Region->delivery_cost ?? 0) : 0) * Country()->currancy_value), 2) }} {{Country()->currancy_code}}
             </div>
 
           </div>

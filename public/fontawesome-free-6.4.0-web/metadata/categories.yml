@@ -812,7 +812,7 @@ devices-hardware:
     - tv
     - upload
     - walkie-talkie
-  label: Devices + Hardware
+  label: Products + Hardware
 disaster:
   icons:
     - biohazard

@@ -59,7 +59,7 @@ class CreateBranchesTable extends Migration
 
             $table->timestamps();
         });
-        Schema::create('branch_device', function (Blueprint $table) {
+        Schema::create('branch_product', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('branch_id');
@@ -68,8 +68,8 @@ class CreateBranchesTable extends Migration
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->nullable()->on('categories')->references('id')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->unsignedBigInteger('device_id');
-            $table->foreign('device_id')->nullable()->on('devices')->references('id')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->nullable()->on('products')->references('id')->onUpdate('cascade')->onDelete('cascade');
 
             $table->timestamps();
         });
@@ -77,7 +77,7 @@ class CreateBranchesTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('branch_device');
+        Schema::dropIfExists('branch_products');
         Schema::dropIfExists('branch_category');
         Schema::dropIfExists('branch_region');
         Schema::dropIfExists('branches');

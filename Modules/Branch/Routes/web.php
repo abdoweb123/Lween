@@ -10,7 +10,7 @@ Route::group(['prefix' => 'dashboard', 'as' => 'admin.'], function () {
 
         Route::GET('branch/{branch}/category/{category}/categories', [Controller::class, 'editCategories'])->name('branch.categories');
         Route::POST('branch/{branch}/category/{category}/categories/update', [Controller::class, 'updateCategories'])->name('branch.category.update');
-        Route::GET('branch/{branch}/category/{category}/devices', [Controller::class, 'editDevices'])->name('branch.category.devices');
-        Route::POST('branch/{branch}/category/{category}/devices/update', [Controller::class, 'updateDevices'])->name('branch.category.devices.update');
+        Route::GET('branch/{branch}/category/{category}/products', [Controller::class, 'editProducts'])->name('branch.category.products');
+        Route::POST('branch/{branch}/category/{category}/products/update', [Controller::class, 'updateProducts'])->name('branch.category.products.update');
     });
 });

@@ -23,7 +23,7 @@ class WhatsApp
 
     public static function SendOrder($id)
     {
-        $Order = Order::with('Branch', 'Client.Country', 'Devices', 'Address')->find($id);
+        $Order = Order::with('Branch', 'Client.Country', 'Products', 'Address')->find($id);
 
         $message = '\n *'.__('trans.newOrders').' ('.env('APP_NAME').')* \n';
         $message .= '\n *Order Number :* '.$Order->id;
@@ -62,17 +62,17 @@ class WhatsApp
         }
 
         $message .= '\n *'.__('trans.items').' :* ';
-        foreach ($Order->Devices as $Device) {
-            $message .= '\n *'.__('trans.item').' :* '.strip_tags($Device->title());
-            if ($Device->pivot->color_id) {
-                $Color = Color($Device->pivot->color_id);
+        foreach ($Order->Products as $Product) {
+            $message .= '\n *'.__('trans.item').' :* '.strip_tags($Product->title());
+            if ($Product->pivot->color_id) {
+                $Color = Color($Product->pivot->color_id);
                 $message .= '\n *'.__('trans.color').' :* '.$Color->title();
             }
-            if ($Device->pivot->price) {
-                $message .= '\n *'.__('trans.price').' :* '.$Device->pivot->price;
+            if ($Product->pivot->price) {
+                $message .= '\n *'.__('trans.price').' :* '.$Product->pivot->price;
             }
-            if ($Device->pivot->quantity) {
-                $message .= '\n *'.__('trans.quantity').' :* '.$Device->pivot->quantity.'\n';
+            if ($Product->pivot->quantity) {
+                $message .= '\n *'.__('trans.quantity').' :* '.$Product->pivot->quantity.'\n';
             }
         }
         $message .= '\n *'.__('trans.subTotal').' :* '.$Order->sub_total.' '.Country()->currancy_code;

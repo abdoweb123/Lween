@@ -13,7 +13,7 @@ class CreateDevicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('devices', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('brand_id')->nullable();
             $table->boolean('status')->default(1);
@@ -45,6 +45,6 @@ class CreateDevicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('devices');
+        Schema::dropIfExists('products');
     }
 }

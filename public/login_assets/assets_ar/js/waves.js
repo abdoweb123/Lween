@@ -69,7 +69,7 @@
             var relativeX   = (e.pageX - pos.left);
             var scale       = 'scale('+((el.clientWidth / 100) * 10)+')';
 
-            // Support for touch devices
+            // Support for touch products
             if ('touches' in e) {
               relativeY   = (e.touches[0].pageY - pos.top);
               relativeX   = (e.touches[0].pageX - pos.left);

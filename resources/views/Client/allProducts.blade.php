@@ -76,7 +76,7 @@
     <div class="row regular ">
       @foreach($products as $product)
         <div class=" p-3 col-lg-3 col-md-4 col-6">
-          <a href="{{ route('Client.devices.details', $product->id) }}">
+          <a href="{{ route('Client.products.details', $product->id) }}">
           <div class="card border-0 news-card position-relative">
             <div class="img-card d-flex align-items-center">
               <img class="w-100 h-auto" src="{{asset($product->header)}}" />

@@ -22,7 +22,7 @@ class CreateBranchDeviceTable extends Migration
             
             $table->foreign('branch_id', 'branch_device_branch_id_foreign')->references('id')->on('branches')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('category_id', 'branch_device_category_id_foreign')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('device_id', 'branch_device_device_id_foreign')->references('id')->on('devices')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('device_id', 'branch_device_device_id_foreign')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

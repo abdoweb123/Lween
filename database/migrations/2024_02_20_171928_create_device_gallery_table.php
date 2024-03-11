@@ -22,7 +22,7 @@ class CreateDeviceGalleryTable extends Migration
             $table->timestamps();
             
             $table->foreign('color_id', 'device_gallery_color_id_foreign')->references('id')->on('colors')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('device_id', 'device_gallery_device_id_foreign')->references('id')->on('devices')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('device_id', 'device_gallery_device_id_foreign')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

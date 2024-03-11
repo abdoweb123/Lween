@@ -157,13 +157,13 @@
                 <table class="table table-hover border ">
                   <thead>
                   <tr>
-                    <th scope="col">مقاس </th>
+                    <th scope="col">@lang('trans.size') </th>
                     <th class="size-iteam" id="sizeValue" scope="col">US</th>
-                    <th scope="col">الطول</th>
-                    <th scope="col">طول الأكمام</th>
-                    <th scope="col">قياس الصدر</th>
-                    <th scope="col">كتف</th>
-                    <th scope="col">كفة</th>
+                    <th scope="col">@lang('trans.height')</th>
+                    <th scope="col">@lang('trans.sleeve_length')</th>
+                    <th scope="col">@lang('trans.chest_size')</th>
+                    <th scope="col">@lang('trans.shoulder')</th>
+                    <th scope="col">@lang('trans.cuff')</th>
                   </tr>
                   </thead>
                   <tbody class="sizeTableBody" id="sizeTableBody">
@@ -204,50 +204,49 @@
                   </tr>
                   </tbody>
                 </table>
-                <p class="text-secondary py-2">*تم الحصول على هذه البيانات عبر قياس المنتج يدوياً، وقد تتباين القياسات
-                  بمقدار 1-2 سم.
-
+                <p class="text-secondary py-2">
+                  @lang('trans.data_get_by_size')
                 </p>
               </div>
 
               <div class="col-lg-7 col-12">
                 <h5 class="py-2 fs-6">
-                  كيفية اخذ قياسات المنتج
+                  @lang('trans.how_to_get_product_size')
                 </h5>
                 <h6>
                   <span class="index-dot px-2 text-white">1</span>
-                  الكتف
+                  @lang('trans.theShoulder')
                 </h6>
                 <p>
-                  قم بالقياس من حيث يلتقي خط الكتف بالكم من جانب إلى الجانب الآخر.
+                  @lang('trans.theShoulder_desc')
                 </p>
                 <h6>
                   <span class="index-dot px-2 text-white">2</span>
-                  الصدر
+                  @lang('trans.theChest')
                 </h6>
                 <p>
-                  قم بالقياس من الغرز الموجودة أسفل الإبط من جانب إلى الجانب الآخر..
+                  @lang('trans.theChest_desc')
                 </p>
                 <h6>
                   <span class="index-dot px-2 text-white">3</span>
-                  طول الأكمام
+                 @lang('trans.sleeve_length')
                 </h6>
                 <p>
-                  قم بالقياس من حيث يلتقي خط الكتف من فتحة الذراع إلى الكفة.
+                  @lang('trans.sleeve_length_desc')
                 </p>
                 <h6>
                   <span class="index-dot px-2 text-white">4</span>
-                  طول الفستان / الطول
+                  @lang('trans.dress_height')
                 </h6>
                 <p>
-                  قم بالقياس من حيث تلتقي خياطة الكتف مع الياقة إلى الكفة.
+                  @lang('trans.dress_height_desc')
                 </p>
                 <h6>
                   <span class="index-dot px-2 text-white">4</span>
-                  طول الأكمام
+                  @lang('trans.sleeve_length')
                 </h6>
                 <p>
-                  قم بالقياس من حيث يلتقي خط الكتف من فتحة الذراع إلى الكفة.
+                  @lang('trans.sleeve_length_desc')
                 </p>
               </div>
               <div class="col-lg-4 col-12 d-flex align-items-center">

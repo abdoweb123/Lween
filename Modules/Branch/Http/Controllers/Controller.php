@@ -8,7 +8,7 @@ use Modules\Branch\Entities\Model as Branch;
 use Modules\Category\Entities\Model as Category;
 use Modules\Country\Entities\Country;
 use Modules\Country\Entities\Region;
-use Modules\Device\Entities\Device;
+use Modules\Product\Entities\Product;
 
 class Controller extends BasicController
 {
@@ -84,19 +84,19 @@ class Controller extends BasicController
         return redirect()->route('admin.branches.show', ['branch' => $Branch]);
     }
 
-    public function editDevices(Branch $Branch, Category $Category, Request $request)
+    public function editProducts(Branch $Branch, Category $Category, Request $request)
     {
-        $Devices = Device::select(['id', 'title_ar', 'title_en'])->whereHas('Categories', function ($query) use ($Category) {
+        $Products = Product::select(['id', 'title_ar', 'title_en'])->whereHas('Categories', function ($query) use ($Category) {
             $query->where('category_id', $Category->id);
         })->without(['Images', 'SizeColor'])->get();
 
-        return view('branch::editDevices', compact('Branch', 'Category', 'Devices'));
+        return view('branch::editProducts', compact('Branch', 'Category', 'Products'));
     }
 
-    public function updateDevices(Branch $Branch, Category $Category, Request $request)
+    public function updateProducts(Branch $Branch, Category $Category, Request $request)
     {
-        $Branch->Devices()->detach($Branch->Devices()->where('category_id', $Category->id)->pluck('device_id'));
-        $Branch->Devices()->attach($request->devices, ['category_id' => $Category->id]);
+        $Branch->Products()->detach($Branch->Products()->where('category_id', $Category->id)->pluck('product_id'));
+        $Branch->Products()->attach($request->products, ['category_id' => $Category->id]);
         alert()->success(__('trans.updatedSuccessfully'));
 
         return redirect()->route('admin.branches.show', ['branch' => $Branch]);

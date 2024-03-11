@@ -294,7 +294,7 @@
 	FastClick.prototype.sendClick = function(targetElement, event) {
 		var clickEvent, touch;
 
-		// On some Android devices activeElement needs to be blurred otherwise the synthetic click will have no effect (#24)
+		// On some Android products activeElement needs to be blurred otherwise the synthetic click will have no effect (#24)
 		if (document.activeElement && document.activeElement !== targetElement) {
 			document.activeElement.blur();
 		}
@@ -544,7 +544,7 @@
 		this.trackingClick = false;
 		this.trackingClickStart = 0;
 
-		// On some iOS devices, the targetElement supplied with the event is invalid if the layer
+		// On some iOS products, the targetElement supplied with the event is invalid if the layer
 		// is performing a transition or scroll, and has to be re-detected manually. Note that
 		// for this to function correctly, it must be called *after* the event target is checked!
 		// See issue #57; also filed as rdar://13048589 .
@@ -737,7 +737,7 @@
 		var blackberryVersion;
 		var firefoxVersion;
 
-		// Devices that don't support touch don't need FastClick
+		// Products that don't support touch don't need FastClick
 		if (typeof window.ontouchstart === 'undefined') {
 			return true;
 		}

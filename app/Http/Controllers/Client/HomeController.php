@@ -24,7 +24,7 @@ use Modules\Contact\Entities\Model as Contact;
 use Modules\Brand\Entities\Model as Brand;
 use Modules\Country\Entities\Country;
 use Modules\Coupon\Entities\Model as Coupon;
-use Modules\Device\Entities\Device;
+use Modules\Product\Entities\Product;
 use Modules\Order\Entities\Model as Order;
 use Modules\Service\Entities\Model as Service;
 use Modules\Category\Entities\Model as Category;
@@ -36,47 +36,31 @@ class HomeController extends BasicController
     /*** Go to main page ***/
     public function home()
     {
-        $locale = App::getLocale();
-
         $Ads = Ad::Active()->get();
         $Sliders = Slider::Active()->get();
-        $Brands = Brand::Active()->get();
-        $new_arrivals = Device::with(['Gallery', 'Categories'])->where('new_arrival', 1)->take(6)->get();
-        $most_selling = Device::with(['Gallery', 'Categories'])->where('most_selling', 1)->take(6)->get();
-        $featured = Device::where('featured', 1)->take(6)->get();
-        $offers = Device::query()->HasDiscount()->take(3)->get();
-        $Services = Service::Active()->get();
 
-        return view('Client.mainPage', compact('Sliders', 'Ads', 'new_arrivals', 'most_selling', 'featured', 'offers', 'Services','Brands'));
+        return view('Client.mainPage', compact('Sliders', 'Ads'));
     }
 
 
-    public function device($device_id,$color_id = null)
+    public function product($product_id,$color_id = null)
     {
-        $Device = Device::where('id', $device_id)->with(['Specs', 'Accessories', 'Categories', 'Features', 'Gallery'])->firstorfail();
+        $Product = Product::where('id', $product_id)->with(['Specs', 'Accessories', 'Categories', 'Features', 'Gallery'])->firstorfail();
 
-        if($Device->Items->count() && $color_id == NULL){
-            return redirect()->route('Client.device',['device_id'=>$device_id,'color_id'=>$Device->Items->whereNotNull('color_id')->first()->color_id]);
+        if($Product->Items->count() && $color_id == NULL){
+            return redirect()->route('Client.product',['product_id'=>$product_id,'color_id'=>$Product->Items->whereNotNull('color_id')->first()->color_id]);
         }
         
-        $wishlist = DB::table('wishlist')->where('client_id', client_id())->where('device_id', $Device->id)->exists();
+        $wishlist = DB::table('wishlist')->where('client_id', client_id())->where('product_id', $Product->id)->exists();
 
-        return view('Client.device', compact('Device', 'wishlist'));
+        return view('Client.product', compact('Product', 'wishlist'));
     }
 
 
-    public function BuildYourDevice ($device_id,$color_id)
+    public function report($product_id,$size_id,$color_id,$specification_id)
     {
-        $Device = Device::where('id', $device_id)->with(['Categories', 'Gallery','Items'])->firstorfail();
-
-        return view('Client.build_your_device', compact('Device'));
-    }
-
-
-    public function report($device_id,$size_id,$color_id,$specification_id)
-    {
-        $Device = Device::where('id', $device_id)->with(['Categories', 'Gallery','Items'])->firstorfail();
-        $SelectedItem = $Device->Items
+        $Product = Product::where('id', $product_id)->with(['Categories', 'Gallery','Items'])->firstorfail();
+        $SelectedItem = $Product->Items
             ->when($size_id, function ($query) use($size_id) {
                 return $query->where('size_id', $size_id);
             })
@@ -88,7 +72,7 @@ class HomeController extends BasicController
             })
             ->first();
         $data = [
-            'Device' => $Device,
+            'Product' => $Product,
             'SelectedItem' => $SelectedItem,
             'SelectedColor' => $color_id,
             'SelectedSize' => $size_id,
@@ -105,7 +89,7 @@ class HomeController extends BasicController
             $Category = Category::Active()->where('id',request('category'))->first();
         }
 
-        $Devices = Device::with(['Gallery', 'Categories'])
+        $Products = Product::with(['Gallery', 'Categories'])
             ->when(request('brand_id'), function ($query) {
                 return $query->where('brand_id', request('brand_id'));
             })
@@ -118,28 +102,6 @@ class HomeController extends BasicController
                 return $query->whereHas('Categories', function ($query) {
                     $query->where('categories.id', request('category'));
                 });
-            })
-            ->when(request('colors'), function ($query) {
-                return $query->whereHas('Items', function ($query) {
-                    $query->whereIn('device_item.color_id', request('sizes'));
-                });
-            })
-            ->when(request('sizes'), function ($query) {
-                return $query->whereHas('Items', function ($query) {
-                    $query->whereIn('device_item.size_id', request('sizes'));
-                });
-            })
-            ->when(request('processors'), function ($query) {
-                return $query->whereIn('processor_id', request('processors'));
-            })
-            ->when(request('memories'), function ($query) {
-                return $query->whereIn('memory_id', request('memories'));
-            })
-            ->when(request('storages'), function ($query) {
-                return $query->whereIn('storage_id', request('storages'));
-            })
-            ->when(request('os'), function ($query) {
-                return $query->whereIn('os', request('os'));
             })
             ->when(request('max_price'), function ($query) {
                 return $query->where('price', '>=', request('max_price'));
@@ -157,7 +119,7 @@ class HomeController extends BasicController
             })
             ->paginate(25);
 
-        return view('Client.categories', compact('Devices','Category'));
+        return view('Client.categories', compact('Products','Category'));
     }
 
 
@@ -201,13 +163,13 @@ class HomeController extends BasicController
             $branch_id = $request->branch_id;
         }
 
-        $Cart = Cart::where('client_id', client_id())->with('Device', 'Color')->get();
+        $Cart = Cart::where('client_id', client_id())->with('Product', 'Color')->get();
         $sub_total = 0;
         $discount = 0;
         foreach ($Cart as $key => $CartItem) {
-            $PriceItem = $CartItem->Device->Items->when($CartItem->item_id, function ($query) use($CartItem) {
+            $PriceItem = $CartItem->Product->Items->when($CartItem->item_id, function ($query) use($CartItem) {
                                 return $query->where('id', $CartItem->item_id);
-                            })->first() ?? $CartItem->Device;
+                            })->first() ?? $CartItem->Product;
             $sub_total += $PriceItem->CalcPrice() * $CartItem->quantity;
             $discount += ($PriceItem->Price() - $PriceItem->CalcPrice()) * $CartItem->quantity;
         }
@@ -233,18 +195,18 @@ class HomeController extends BasicController
         ]);
 
         foreach ($Cart as $key => $CartItem) {
-            $SelectedItem = $CartItem->Device->Items->when($CartItem->item_id, function ($query) use($CartItem) {
+            $SelectedItem = $CartItem->Product->Items->when($CartItem->item_id, function ($query) use($CartItem) {
                                 return $query->where('id', $CartItem->item_id);
-                            })->first() ?? $CartItem->Device;
-            $Order->Devices()->attach($CartItem->device->id, [
+                            })->first() ?? $CartItem->Product;
+            $Order->Products()->attach($CartItem->Product->id, [
                 'color_id' => $CartItem->color_id > 0 ? $CartItem->color_id : null,
                 'price' => $SelectedItem->Calcprice(),
                 'quantity' => $CartItem->quantity,
                 'total' => $SelectedItem->Calcprice() * $CartItem->quantity,
             ]);
-            $CartItem->Device->Items()->when($CartItem->item_id, function ($query) use($CartItem) {
+            $CartItem->Product->Items()->when($CartItem->item_id, function ($query) use($CartItem) {
                 return $query->where('id', $CartItem->item_id);
-            })->decrement('quantity', $CartItem->quantity) ?? Device::where('id', $CartItem->device->id)->decrement('quantity', $CartItem->quantity);
+            })->decrement('quantity', $CartItem->quantity) ?? Product::where('id', $CartItem->product->id)->decrement('quantity', $CartItem->quantity);
             $CartItem->delete();
         }
 
@@ -257,112 +219,6 @@ class HomeController extends BasicController
         alert()->success(__('trans.order_added_successfully'));
 
         return redirect()->route('Client.home');
-    }
-
-
-    public function chooseAddressShipping(Request $request)
-    {
-        $address = Address::query()->where('client_id',client_id())->first();
-        return view('Client.Purchase',compact('address'));
-    }
-
-
-    public function addNewAddress($type=null)
-    {
-        if($type === 'profile'){
-            return view('Client.addNewAddress',compact('type'));
-        }
-        return view('Client.addNewAddress');
-    }
-
-
-    public function storeAddress(Request $request, $type=null)
-    {
-         $request->validate([
-             'region_id' => ['required','integer']
-         ]);
-
-         $checkAddress = Address::where('client_id',client_id())->first();
-
-         if ($checkAddress){
-             $checkAddress->delete();
-         }
-
-        $Address = Address::create([
-            'client_id' => Client_id(),
-            'region_id' => $request->region_id,
-            'block' => $request->block,
-            'road' => $request->road,
-            'building_no' => $request->building_no,
-            'floor_no' => $request->floor_no,
-            'apartment' => $request->apartmentNo,
-            'type' => $request->apartmentType,
-            'additional_directions' => $request->additional_directions,
-        ]);
-
-        session()->flash('toast_message', ['type' => 'success', 'message' => __('trans.addedSuccessfully')]);
-
-        if($type === 'profile'){
-            return redirect()->route('Client.profile');
-        }
-
-        return redirect()->route('Client.chooseAddressShipping');
-    }
-
-
-    public function deleteAddress(Request $request)
-    {
-        $addressId = $request->input('address_id');
-
-        $address = Address::query()->find($addressId);
-        if ($address){
-            $address->delete();
-            return response()->json([
-                'message' => __('trans.DeletedSuccessfully')
-            ]);
-        }
-        else{
-            return response()->json([
-                'message' => __('trans.somethingWrong')
-            ]);
-        }
-
-    }
-
-
-    public function editAddress($id, $type=null)
-    {
-        $address = Address::query()->findOrFail($id);
-
-        if($type === 'profile'){
-            return view('Client.editAddress',compact('address','type'));
-        }
-
-        return view('Client.editAddress',compact('address'));
-    }
-
-
-    public function updateAddress(Request $request, $id, $type=null)
-    {
-        $address = Address::findOrFail($id);
-
-        $address->update([
-            'block' => $request->block,
-            'road' => $request->road,
-            'building_no' => $request->building_no,
-            'floor_no' => $request->floor_no,
-            'apartment' => $request->apartmentNo,
-            'type' => $request->apartmentType,
-            'additional_directions' => $request->additional_directions,
-        ]);
-
-        session()->flash('toast_message', ['type' => 'success', 'message' => __('trans.updatedSuccessfully')]);
-
-        if($type === 'profile'){
-            return redirect()->route('Client.profile');
-        }
-
-        return redirect()->route('Client.chooseAddressShipping');
     }
 
 
@@ -396,13 +252,16 @@ class HomeController extends BasicController
 
     public function storeOrder(Request $request)
     {
-//        return $request;
-
         $delivery_id = session()->get('delivery_id');
 
         $address = Address::query()->where('client_id',client_id())->first();
 
-        $delivery_cost = $address->Region->delivery_cost;
+        if ($delivery_id == 1){ // delivery
+            $delivery_cost = $address->Region->delivery_cost;
+        }else{
+            $delivery_cost = 0;
+        }
+
 
         $carts = Cart::where('client_id', client_id())->get();
 
@@ -448,12 +307,12 @@ class HomeController extends BasicController
             ]);
 
             foreach ($carts as $cart) {
-                $Order->Devices()->attach($cart->device->id, [
-                    'price' => $cart->Device->Calcprice(),
+                $Order->Products()->attach($cart->product->id, [
+                    'price' => $cart->Product->Calcprice(),
                     'quantity' => $cart->quantity,
-                    'total' => $cart->Device->Calcprice() * $cart->quantity,
+                    'total' => $cart->Product->Calcprice() * $cart->quantity,
                 ]);
-                $device = Device::where('id', $cart->device_id)->decrement('quantity', $cart->quantity);
+                $product = Product::where('id', $cart->product_id)->decrement('quantity', $cart->quantity);
                 $cart->delete();
             }
 
@@ -483,7 +342,7 @@ class HomeController extends BasicController
 
     public function confirm(Request $request)
     {
-        $Cart = Cart::where('client_id', client_id())->with('Device', 'Color')->get();
+        $Cart = Cart::where('client_id', client_id())->with('Product', 'Color')->get();
 
         return view('Client.confirm', compact('Cart'));
     }
@@ -491,7 +350,7 @@ class HomeController extends BasicController
 
     public function cart()
     {
-        $Cart = Cart::where('client_id', client_id())->with('Device', 'Color')->get();
+        $Cart = Cart::where('client_id', client_id())->with('Product', 'Color')->get();
         return view('Client.cart', compact('Cart'));
     }
 
@@ -538,9 +397,9 @@ class HomeController extends BasicController
     public function plus()
     {
         $CartItem = Cart::where('client_id', client_id())->where('id', request('id'))->first();
-        $DeviceQuantity = Device::where('id', $CartItem->device_id)->select('quantity')->value('quantity');
-        if ($DeviceQuantity > 0) {
-            if ($CartItem->quantity < $DeviceQuantity) {
+        $ProductQuantity = Product::where('id', $CartItem->product_id)->select('quantity')->value('quantity');
+        if ($ProductQuantity > 0) {
+            if ($CartItem->quantity < $ProductQuantity) {
                 Cart::where('id', $CartItem->id)->increment('quantity', 1);
             } else {
                 return response()->json([
@@ -571,19 +430,19 @@ class HomeController extends BasicController
     public function AddToCart(Request $request)
     {
 //        return $request;
-        $device_id = $request->device_id;
+        $product_id = $request->product_id;
         $quantity = $request->quantity ?? 1;
-        $DeviceQuantity = Device::where('id', $device_id)->select('quantity')->value('quantity');
+        $ProductQuantity = Product::where('id', $product_id)->select('quantity')->value('quantity');
 
-        if ($DeviceQuantity > 0) {
+        if ($ProductQuantity > 0) {
             $CartItem = Cart::query()->where('client_id', client_id())
-                ->where('device_id', $device_id)
+                ->where('product_id', $product_id)
                 ->where('height_id',$request->height_id)
                 ->where('width_id',$request->width_id)
                 ->where('sides_closure',$request->sides_closure ? '1' : '0')
                 ->where('front_closure',$request->front_closure ? '1' : '0')->first();
             if ($CartItem) {
-                if ($CartItem->quantity < $DeviceQuantity) {
+                if ($CartItem->quantity < $ProductQuantity) {
                         Cart::where('id', $CartItem->id)->increment('quantity', $quantity);
                 } else {
                     return response()->json([
@@ -596,7 +455,7 @@ class HomeController extends BasicController
                 // Store in cart
                 Cart::insert([
                     'client_id' => client_id(),
-                    'device_id' => $device_id,
+                    'product_id' => $product_id,
                     'quantity' => $quantity,
                     'height_id' => $request->height_id,
                     'width_id' => $request->width_id,
@@ -605,8 +464,8 @@ class HomeController extends BasicController
                     'notes' => $request->notes,
                 ]);
 
-                // increase quantity in Device (product)
-//                Device::query()->where('id', $device_id)->decrement('quantity', $quantity);
+                // increase quantity in Product (product)
+//                Product::query()->where('id', $product_id)->decrement('quantity', $quantity);
             }
         } else {
             return Redirect::back()->with([
@@ -652,6 +511,7 @@ class HomeController extends BasicController
             'quantity' => $cart->quantity,
         ]);
     }
+
 
     /*** remove element from cart (with ajax) ***/
     public function removeCartElement(Request $request)
@@ -702,10 +562,10 @@ class HomeController extends BasicController
 
     public function ToggleWishlist(Request $request)
     {
-        $device_id = $request->device_id;
+        $product_id = $request->product_id;
 
-        if (DB::table('wishlist')->where('client_id', client_id())->where('device_id', $device_id)->exists()) {
-            DB::table('wishlist')->where('client_id', client_id())->where('device_id', $device_id)->delete();
+        if (DB::table('wishlist')->where('client_id', client_id())->where('product_id', $product_id)->exists()) {
+            DB::table('wishlist')->where('client_id', client_id())->where('product_id', $product_id)->delete();
 
             return response()->json([
                 'success' => true,
@@ -716,7 +576,7 @@ class HomeController extends BasicController
         } else {
             DB::table('wishlist')->insert([
                 'client_id' => client_id(),
-                'device_id' => $device_id,
+                'product_id' => $product_id,
             ]);
 
             return response()->json([
@@ -740,7 +600,7 @@ class HomeController extends BasicController
 
     public function getAllCategories(Request $request)
     {
-        $categories = Category::Active()->whereHas('Devices')->get();
+        $categories = Category::Active()->whereHas('Products')->get();
         return view('Client.categories', compact('categories'));
     }
 
@@ -748,12 +608,9 @@ class HomeController extends BasicController
     /*** change ( language, currency, country-region )  ***/
     public function changeWebsiteSettings(Request $request)
     {
-//        return $request;
-
         // To change currency and country in (config)
         $country =  Countries()->where('currancy_code_en',$request->currancy_code)->first();
         session()->put('country',$country->id);
-//     return   session()->get('country');
         Country($country->id);
 
 
@@ -792,12 +649,12 @@ class HomeController extends BasicController
         $sub_total = 0;
         $discount = 0;
         foreach ($carts as $cart){
-            if ($cart->Device->HasDiscount()){
-                $sub_total += $cart->Device->RealPrice() * $cart->quantity;
-                $discount += ($cart->Device->Price() - $cart->Device->RealPrice()) * $cart->quantity;
+            if ($cart->Product->HasDiscount()){
+                $sub_total += $cart->Product->RealPrice() * $cart->quantity;
+                $discount += ($cart->Product->Price() - $cart->Product->RealPrice()) * $cart->quantity;
             }
             else{
-                $sub_total += $cart->Device->Price() * $cart->quantity;
+                $sub_total += $cart->Product->Price() * $cart->quantity;
             }
         }
 
@@ -808,6 +665,7 @@ class HomeController extends BasicController
 
         return $result;
     }
+
 
     /*** calculate the subtotal of cart used in () ***/
     public function calcTotalCart($sub_total)

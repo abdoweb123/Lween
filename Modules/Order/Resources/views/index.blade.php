@@ -33,9 +33,9 @@
                     <input type="checkbox" class="DTcheckbox" value="{{ $Order->id }}"> - {{ $Order->id }}
                 </td>
                 <td>{{ $Order->Client->name }}</td>
-                <td>{{ $Order->Client->phone }}</td>
+                <td>{{$Order->Client->phone }}</td>
                 <td><a data-bs-toggle="modal" data-bs-target="#order-{{ $Order['id'] }}" href="#">@lang('trans.details')</a></td>
-                <td style="text-align:center;">
+              {{-- <td style="text-align:center;">
                     @if ($Order['status'] == 0 && $Order['follow'] == 0)
                         <select class="select form-control">
                             <option selected hidden disabled>{{  __('trans.Refuse/ Accept')  }}</option>
@@ -79,6 +79,28 @@
                             {{  __('trans.not_complete')  }}
                         </p>
                     @endif
+                </td>--}}
+                <td>
+                    @if($Order->delivery_id > 1)
+                        <p>
+                            {{  __('trans.Receipt_shop')  }}
+                        </p>
+                    @else
+                        @if($Order['status'] == '3')
+                            <p>
+                                {{  __('trans.delivered')  }}
+                            </p>
+                        @else
+                            <select class="select form-control">
+                                <option data-status="4" data-id="{{ $Order['id'] }}" {{$Order['status'] == '4' ? 'selected' : ''}}>{{  __('trans.refused')  }}</option>
+                                <option data-status="0" data-id="{{ $Order['id'] }}" {{$Order['status'] == '0' ? 'selected' : ''}}>{{  __('trans.pending')  }}</option>
+                                <option data-status="1" data-id="{{ $Order['id'] }}" {{$Order['status'] == '1' ? 'selected' : ''}}>{{  __('trans.preparing')  }}</option>
+                                <option data-status="2" data-id="{{ $Order['id'] }}" {{$Order['status'] == '2' ? 'selected' : ''}}>{{  __('trans.ready')  }}</option>
+                                <option data-status="3" data-id="{{ $Order['id'] }}" {{$Order['status'] == '3' ? 'selected' : ''}}>{{  __('trans.delivered')  }}</option>
+                            </select>
+                        @endif
+                    @endif
+
                 </td>
                 <td>{{ $Order['net_total'] . ' '. Country()->currancy_code }}</td>
                 <td>{{ $Order->Payment ? $Order->Payment->title() : '' }}</td>
@@ -230,7 +252,7 @@
                         <thead>
                             <tr>
                                 <th>{{ __("trans.title") }}</th>
-                                @if($Order->Devices->sum('color_id') > 0)
+                                @if($Order->Products->sum('color_id') > 0)
                                 <th>{{ __("trans.color") }}</th>
                                 @endif
                                 <th>{{ __("trans.quantity") }}</th>
@@ -238,10 +260,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($Order->Devices as $item )
+                            @foreach($Order->Products as $item )
                             <tr>
                                 <td>{{ $item->title() }}</td>
-                                @if($Order->Devices->sum('color_id') > 0)
+                                @if($Order->Products->sum('color_id') > 0)
                                 <td>{{ Color($item->pivot->color_id)?->title() }}</td>
                                 @endif
                                 <td>{{ $item->pivot->quantity }}</td>
@@ -274,7 +296,6 @@
                     _token: "{{ csrf_token() }}"
                     , id: $(this).find(':selected').attr('data-id')
                     , status: $(this).find(':selected').attr('data-status')
-                    , follow: $(this).find(':selected').attr('data-follow')
                 , }
                 , success: function(response) {
                     location.reload(true);

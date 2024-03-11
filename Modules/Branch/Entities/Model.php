@@ -6,7 +6,7 @@ use App\Models\BaseModel;
 use Modules\Category\Entities\Model as Category;
 use Modules\Country\Entities\Country;
 use Modules\Country\Entities\Region;
-use Modules\Device\Entities\Device;
+use Modules\Product\Entities\Product;
 
 class Model extends BaseModel
 {
@@ -29,8 +29,9 @@ class Model extends BaseModel
         return $this->belongsToMany(Category::class, 'branch_category', 'branch_id', 'category_id');
     }
 
-    public function Devices()
+    public function Product()
     {
-        return $this->belongsToMany(Device::class, 'branch_device', 'branch_id', 'device_id');
+        return $this->belongsToMany(Product::class, 'branch_product', 'branch_id', 'product');
     }
+
 }

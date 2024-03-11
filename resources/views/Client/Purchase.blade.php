@@ -44,11 +44,13 @@
       <div class="row gap-3 address py-2">
         <div id="address_{{$address->id}}" class="col-lg-3 col-8 py-3 position-relative" data-aos="flip-left" data-aos-duration="1000">
           <div class=" position-absolute d-icon">
+            @if(count($address->Orders) == 0)
             <span class="p-2">
                 <a href="#delete" onclick="confirmDelete({{$address->id}})">
                   <i class="fa-solid fa-trash"></i>
                 </a>
             </span>
+            @endif
 
             <span class="p-2">
               <a href="{{route('Client.editAddress',$address->id)}}">

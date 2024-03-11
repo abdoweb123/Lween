@@ -22,7 +22,7 @@ class CreateDeviceSpecsTable extends Migration
             $table->longText('desc_en')->nullable();
             $table->timestamps();
             
-            $table->foreign('device_id', 'device_specs_device_id_foreign')->references('id')->on('devices')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('device_id', 'device_specs_device_id_foreign')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('specs_id', 'device_specs_specs_id_foreign')->references('id')->on('specs')->onDelete('cascade')->onUpdate('cascade');
         });
     }

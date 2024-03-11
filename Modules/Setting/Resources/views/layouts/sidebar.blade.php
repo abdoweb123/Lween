@@ -21,7 +21,7 @@
     </a>
     <ul id="contact_settings" class="dropdown-nav mx-4 collapse" style="">
         @foreach (Settings()->whereNotIn('type',['publicSettings','payments_integration'])->unique('type') as $item)
-        <li><a href="{{ route('admin.settings.index',['type'=>"$item->type"]) }}">{{ __('trans.'.$item->type.'') }}</a></li>
+        <li><a href="{{ route('admin.settings.index',['type'=>"$item->type"]) }}">{{ __('trans.'.$item->type.'')}}</a></li>
         @endforeach
     </ul>
 </li>

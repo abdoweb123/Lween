@@ -7,16 +7,24 @@
           @lang('trans.who_we_are')
         </h4>
         <p class="p-0 fs-6">
-          @lang('trans.who_we_are_desc')
+          {{Settings()->where('key','about_'.lang())->value('value')}}
         </p>
       </div>
       <div class="col-md-4 col-12 d-flex justify-content-lg-center">
         <ul class="p-0 fs-6 ">
+
           <li class="py-1">
             <a href="{{route('Client.policy')}}">
-              @lang('trans.replacement_and_after_sales_service')
+              @lang('trans.policy')
             </a>
           </li>
+
+          <li class="py-1">
+            <a href="{{route('Client.privacy')}}">
+              @lang('trans.privacy')
+            </a>
+          </li>
+
           <li class="py-1">
             <a href="sizes.html" type="button" data-bs-toggle="modal" data-bs-target="#size"
                aria-label="Basic outlined example">
@@ -31,18 +39,16 @@
         </h4>
         <ul class="social d-flex p-0">
           <li>
-            <a href="#">
-              <i class="fab fa-facebook-f icon"></i>
-            </a>
+            <a href="{{Setting('facebook') ?? '#'}}"><i class="fab fa-facebook-f icon"></i></a>
           </li>
           <li>
-            <a href="#"><i class="fab fa-twitter icon"></i></a>
+            <a href="{{Setting('twitter') ?? '#'}}"><i class="fab fa-twitter icon"></i></a>
           </li>
           <li>
-            <a href="#"><i class="fab fa-linkedin-in icon"></i></a>
+            <a href="{{Setting('instagram') ?? '#'}}"><i class="fab fa-snapchat icon"></i></a>
           </li>
           <li>
-            <a href="#"><i class="fab fa-google-plus-g icon"></i></a>
+            <a href="{{Setting('snapchat') ?? '#'}}"><i class="fab fa-instagram icon"></i></a>
           </li>
         </ul>
       </div>

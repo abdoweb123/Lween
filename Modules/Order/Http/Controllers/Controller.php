@@ -11,7 +11,7 @@ class Controller extends BasicController
 {
     public function index(Request $request)
     {
-        $Models = Model::latest()->with('Delivery', 'Branch', 'Client.Country', 'Devices', 'Address')->get();
+        $Models = Model::latest()->with('Delivery', 'Branch', 'Client.Country', 'Products', 'Address')->get();
 
         return view('order::index', compact('Models'));
     }
@@ -25,41 +25,23 @@ class Controller extends BasicController
     {
         $Order = Model::where('id', $request->id)->first();
         $Order->status = $request->status;
-        $Order->follow = $request->follow;
         $Order->save();
 
-
         if($Order->delivery_id == 1){
-            if( $request->status == 2 ){
+            if( $request->status == 4){
                 $msg =  'order_rejected';
             }
-            elseif( $request->status == 1 && $request->follow == 1 ){
+            elseif( $request->status == 0){
+                $msg =  'order_pending';
+            }
+            elseif( $request->status == 1){
                 $msg =  'order_preparing';
             }
-            elseif( $request->status == 1 && $request->follow == 2 ){
-                $msg =  'order_onway';
-            }
-            elseif( $request->status == 1 && $request->follow == 3 ){
-                $msg =  'order_delivered';
-            }
-            else{
-                $msg = 'updatedSuccessfully';
-            }
-        }elseif($Order->delivery_id > 1){
-            if( $request->status == 2 ){
-                $msg =  'order_rejected';
-            }
-            elseif( $request->status == 1 && $request->follow == 1 ){
-                $msg =  'order_preparing';
-            }
-            elseif( $request->status == 1 && $request->follow == 2 ){
+            elseif( $request->status == 2){
                 $msg =  'order_ready';
             }
-            elseif( $request->status == 1 && $request->follow == 3 ){
-                $msg =  'order_delivered';
-            }
             else{
-                $msg = 'updatedSuccessfully';
+                $msg = 'order_delivered';
             }
         }
         
@@ -69,10 +51,11 @@ class Controller extends BasicController
         $message .= '%0a *Powered By Emcan Solutions* %0a';
         
         
-        WhatsApp::SendWhatsApp($Order->client()->first()->phone_code . $Order->client()->first()->phone,$message);
+        WhatsApp::SendWhatsApp($Order->client()->first()->Country->phone_code . $Order->client()->first()->phone,$message);
         alert()->success(__('trans.'.$msg));
         return response()->json([
                 'message' => __('trans.'.$msg),
             ]);
     }
+
 }

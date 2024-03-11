@@ -34,7 +34,7 @@
       <div class="col-lg-5  col-12">
         <form action="{{route('Client.AddToCart')}}" method="POST" class="p-0">
           @csrf
-          <input type="hidden" name="device_id" value="{{$product->id}}">
+          <input type="hidden" name="product_id" value="{{$product->id}}">
           <div class="row py-2">
             <h5 class="header-card p-0">#{{$product->id}} </h5>
             <p class="card-text body-card fs-6 p-0">
@@ -155,48 +155,26 @@
         <table class="table">
           <thead class="bg-light">
           <tr>
-            <th scope="col">عرض العباية</th>
-            <th scope="col">طول العباية </th>
-            <th scope="col">صور المنتج
-            </th>
-            <th scope="col">السعر
-            </th>
+            <th scope="col">@lang('trans.width')</th>
+            <th scope="col">@lang('trans.height')</th>
+            <th scope="col">@lang('trans.price')</th>
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>XS (١٩ انش)
-            </td>
-            <td>46.0
-            </td>
-            <td>لا يوجد صور
-            </td>
-            <td>3,200.00 دإ
-
-            </td>
-          </tr>
-          <tr>
-            <td>XS (١٩ انش)
-            </td>
-            <td>46.0
-            </td>
-            <td>لا يوجد صور
-            </td>
-            <td>3,200.00 دإ
-
-            </td>
-          </tr>
-          <tr>
-            <td>XS (١٩ انش)
-            </td>
-            <td>46.0
-            </td>
-            <td>لا يوجد صور
-            </td>
-            <td>3,200.00 دإ
-
-            </td>
-          </tr>
+           @forelse($productOptions as $productOption)
+             <tr>
+               <td>{{$productOption['width_title']}}</td>
+               <td>{{$productOption['height_title']}}</td>
+               <td>
+                 @if($product->HasDiscount())
+                   <span>{{$product->PriceWithCurrancy()}}</span>
+                 @else
+                   <span>{{$product->price}}</span> {{Country()->currancy_code}}
+                 @endif
+               </td>
+             </tr>
+           @empty
+           @endforelse
           </tbody>
         </table>
       </div>

@@ -24,7 +24,7 @@ class CreateOrderDeviceTable extends Migration
             $table->timestamps();
             
             $table->foreign('color_id', 'order_device_color_id_foreign')->references('id')->on('colors')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('device_id', 'order_device_device_id_foreign')->references('id')->on('devices')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('device_id', 'order_device_device_id_foreign')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('order_id', 'order_device_order_id_foreign')->references('id')->on('orders')->onDelete('cascade')->onUpdate('cascade');
         });
     }

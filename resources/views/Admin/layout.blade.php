@@ -4,7 +4,7 @@
     <title>{{ setting('title_'.lang()) }}</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=product-width, initial-scale=1.0" />
     <meta name="csrf_token" value="{{ csrf_token() }}" content="{{ csrf_token() }}"/>
     <meta name="DT_Lang" value="{{ DT_Lang() }}" content="{{ DT_Lang() }}"/>
     <link rel="icon" href="{{ asset(setting('logo')) }}" type="image/x-icon">
@@ -64,17 +64,16 @@
 
                 @include('order::layouts.sidebar')
                 @include('category::layouts.sidebar')
-                @include('device::layouts.sidebar')
+                @include('product::layouts.sidebar')
                 @include('coupon::layouts.sidebar')
                 @include('slider::layouts.sidebar')
                 @include('ad::layouts.sidebar')
-                @include('service::layouts.sidebar')
+{{--                @include('service::layouts.sidebar')--}}
                 @include('delivery::layouts.sidebar')
                 @include('payment::layouts.sidebar')
-                @include('branch::layouts.sidebar')
                 @include('setting::layouts.sidebar')
-                @include('faq::layouts.sidebar')
-                @include('contact::layouts.sidebar')
+{{--                @include('faq::layouts.sidebar')--}}
+{{--                @include('contact::layouts.sidebar')--}}
                 @include('admin::layouts.sidebar')
                 @include('client::layouts.sidebar')
                 @include('country::layouts.sidebar')
@@ -188,6 +187,7 @@
 
 
     @yield('js')
+
     @yield('script')
 
 </body>

@@ -59,7 +59,7 @@
             @foreach($carts as $cart)
                 <div class="row border-1 border border-secondary p-1 rounded-1 my-2 align-items-center" data-aos="fade-up" data-aos-duration="1000">
                     <div class="col-lg-1 cart-product-delete">
-                        <a onclick="deleteCartItem(this)" data-cart-id="{{$cart->id}}" data-product-id="{{$cart->device_id}}" data-template="template_for_cart_products_list">
+                        <a onclick="deleteCartItem(this)" data-cart-id="{{$cart->id}}" data-product-id="{{$cart->product_id}}" data-template="template_for_cart_products_list">
                             <span class="prefix load_img" style="display: none">
                                 <img class="send-coupon-progress" src="{{asset('assets_client/imgs/spinner.png')}}" width="15" height="15"></span>
                             <span class="icon-delete-circle">
@@ -72,38 +72,38 @@
                     <div class="col-lg-6 col-6">
                         <div class="d-flex">
                             <div class="flex-shrink-0 rounded-0">
-                                <img class="w-100 h-100" src="{{asset($cart->Device->header)}}" alt="...">
+                                <img class="w-100 h-100" src="{{asset($cart->Product->header)}}" alt="...">
                             </div>
                             <div class="flex-grow-1 p-3  fw-bold">
-                                #{{$cart->device_id}} - {{$cart->Height->title}} - {{$cart->Width['title_'.lang()]}}
+                                #{{$cart->product_id}} - {{$cart->Height->title}} - {{$cart->Width['title_'.lang()]}}
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-2 col-3">
                         <select id="updateQuantity_{{$cart->id}}" class="form-select border border-1 rounded-0 w-100 px-4">
-                            @for($i=1; $i<=$cart->Device->quantity; $i++)
+                            @for($i=1; $i<=$cart->Product->quantity; $i++)
                                 <option value="{{$i}}" {{$cart->quantity == $i ? 'selected' : ''}}>{{$i}}</option>
                             @endfor
                         </select>
                     </div>
                     <div class="col-lg-3 col-3 text-price">
-                        @if($cart->Device->HasDiscount())
+                        @if($cart->Product->HasDiscount())
                             <span id="cart-item_{{$cart->id}}" data-has-discount="true" data-cart-id="{{$cart->id}}">
                                 <span class="hasDiscount">
                                     <span id="price_after_discount_{{$cart->id}}" class="hasDiscount_price cart_final_price">
-                                        {{ number_format($cart->Device->RealPrice() * $cart->quantity, 2) }}
+                                        {{ number_format($cart->Product->RealPrice() * $cart->quantity, 2) }}
                                     </span>
                                     {{Country()->currancy_code}}
                                 </span>
                                 <span class="hasDiscount_lineThrough">
                                     <span id="price_before_discount_{{$cart->id}}">
-                                        {{ number_format($cart->Device->Price() * $cart->quantity, 2) }}
+                                        {{ number_format($cart->Product->Price() * $cart->quantity, 2) }}
                                     </span>
                                     {{Country()->currancy_code}}
                                 </span>
                                 <span class="increase_quantity" id="increase_quantity_{{$cart->id}}" style="display:{{$cart->quantity>1? 'block;' : 'none;'}}">
                                     <span id="each_{{$cart->id}}">
-                                        {{ number_format($cart->Device->RealPrice(), 2) }}
+                                        {{ number_format($cart->Product->RealPrice(), 2) }}
                                     </span>
                                   {{Country()->currancy_code}} @lang('trans.each')
                                 </span>
@@ -112,13 +112,13 @@
                             <span id="cart-item_{{$cart->id}}" data-has-discount="false" data-cart-id="{{$cart->id}}">
                                 <span class="no_discount" id="no_discount_{{$cart->id}}">
                                     <span id="no_discount_price_{{$cart->id}}" class="hasDiscount_price cart_final_price">
-                                      {{ number_format($cart->Device->Price() * $cart->quantity, 2) }}
+                                      {{ number_format($cart->Product->Price() * $cart->quantity, 2) }}
                                     </span>
                                     {{Country()->currancy_code}}
                                 </span>
                                 <span class="increase_quantity" id="increase_quantity_{{$cart->id}}" style="display:{{$cart->quantity>1? 'block;' : 'none;'}}">
                                     <span class="each_{{$cart->id}}">
-                                      {{ number_format($cart->Device->Price(), 2) }}
+                                      {{ number_format($cart->Product->Price(), 2) }}
                                     </span>
                                     {{Country()->currancy_code}} @lang('trans.each')
                                 </span>
@@ -242,11 +242,11 @@
 
                                 if (hasDiscount) {
                                     // update price_after_discount
-                                    var price_after_discount = {{$cart->Device->RealPrice()}} * selectedOption;
+                                    var price_after_discount = {{$cart->Product->RealPrice()}} * selectedOption;
                                     $('#price_after_discount_'+cartId).text(price_after_discount);
 
                                     // update price_before_discount
-                                    var price_before_discount = {{$cart->Device->Price()}} * selectedOption;
+                                    var price_before_discount = {{$cart->Product->Price()}} * selectedOption;
                                     $('#price_before_discount_'+cartId).text(price_before_discount);
 
                                     var new_quantity = Number(response.quantity);
@@ -254,7 +254,7 @@
                                     if (new_quantity > 1){
                                         $('#increase_quantity_'+cartId).show();
                                         // update price_after_discount for each
-                                        var price_after_discount_each = {{$cart->Device->RealPrice()}} ;
+                                        var price_after_discount_each = {{$cart->Product->RealPrice()}} ;
                                         $('#each_'+cartId).text(price_after_discount_each);
                                     }else {
                                         $('#increase_quantity_'+cartId).hide();
@@ -265,13 +265,13 @@
                                     console.log(new_quantity_noDiscount);
 
                                     // update price_all
-                                    var price_after = {{$cart->Device->Price()}} * new_quantity_noDiscount;
+                                    var price_after = {{$cart->Product->Price()}} * new_quantity_noDiscount;
                                     $('#no_discount_price_'+cartId).text(price_after);
 
                                     if (new_quantity_noDiscount > 1){
                                         $('#increase_quantity_'+cartId).show();
                                         // update price_after_discount for each
-                                        var price_each = {{$cart->Device->Price()}} ;
+                                        var price_each = {{$cart->Product->Price()}} ;
                                         $('#each_'+cartId).text(price_each);
                                     }else {
                                         $('#increase_quantity_'+cartId).hide();

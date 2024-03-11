@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use Modules\Color\Entities\Model as Color;
-use Modules\Device\Entities\Device;
+use Modules\Product\Entities\Product;
 use Modules\Height\Entities\Model as Height;
 use Modules\Width\Entities\Model as Width;
 
@@ -15,15 +14,11 @@ class Cart extends BaseModel
 
 
     /*** Start Relations ***/
-    public function Device()
+    public function Product()
     {
-        return $this->belongsTo(Device::class);
+        return $this->belongsTo(Product::class);
     }
-
-    public function Color()
-    {
-        return $this->belongsTo(Color::class);
-    }
+    
 
     public function Height()
     {

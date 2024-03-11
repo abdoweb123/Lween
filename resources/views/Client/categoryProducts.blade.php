@@ -48,10 +48,10 @@
             <h6>@lang('trans.sort_by')
             </h6>
             <select class="form-select w-auto border border-dark px-4" aria-label="Default select example" id="selectOptionSortBy">
-              <option value="{{route('Client.category.devices',['id'=>$categoryProducts->id,'searchBy'=>'newest'])}}" {{ $searchBy == 'newest'? 'selected' : '' }}>@lang('trans.newest')</option>
-              <option value="{{route('Client.category.devices',['id'=>$categoryProducts->id,'searchBy'=>'most_popular'])}}" {{ $searchBy == 'most_popular'? 'selected' : '' }}>@lang('trans.most_popular')</option>
-              <option value="{{route('Client.category.devices',['id'=>$categoryProducts->id,'searchBy'=>'lowest_price'])}}" {{ $searchBy == 'lowest_price'? 'selected' : '' }}>@lang('trans.lowest_price')</option>
-              <option value="{{route('Client.category.devices',['id'=>$categoryProducts->id,'searchBy'=>'highest_price'])}}" {{ $searchBy == 'highest_price'? 'selected' : '' }}>@lang('trans.highest_price') </option>
+              <option value="{{route('Client.category.products',['id'=>$categoryProducts->id,'searchBy'=>'newest'])}}" {{ $searchBy == 'newest'? 'selected' : '' }}>@lang('trans.newest')</option>
+              <option value="{{route('Client.category.products',['id'=>$categoryProducts->id,'searchBy'=>'most_popular'])}}" {{ $searchBy == 'most_popular'? 'selected' : '' }}>@lang('trans.most_popular')</option>
+              <option value="{{route('Client.category.products',['id'=>$categoryProducts->id,'searchBy'=>'lowest_price'])}}" {{ $searchBy == 'lowest_price'? 'selected' : '' }}>@lang('trans.lowest_price')</option>
+              <option value="{{route('Client.category.products',['id'=>$categoryProducts->id,'searchBy'=>'highest_price'])}}" {{ $searchBy == 'highest_price'? 'selected' : '' }}>@lang('trans.highest_price') </option>
             </select>
           </div>
         </div>
@@ -59,13 +59,13 @@
       <div class="col-md-5 col-12 d-flex justify-content-md-end">
         <p>
           @if(lang() == 'en')
-            <span class="fw-bold"> {{ ' '.count($categoryProducts->devices).' ' }} </span>
+            <span class="fw-bold"> {{ ' '.count($categoryProducts->products).' ' }} </span>
             <span>@lang('trans.product_n') </span>
             <span>  @lang('trans.was_found')</span>
 
           @else
             @lang('trans.was_found')
-            <span class="fw-bold"> {{ count($categoryProducts->devices)  }} </span>
+            <span class="fw-bold"> {{ count($categoryProducts->products)  }} </span>
             @lang('trans.product_n')
           @endif
         </p>
@@ -74,9 +74,9 @@
 
 
     <div class="row regular ">
-      @foreach($categoryProducts->devices as $product)
+      @foreach($categoryProducts->products as $product)
         <div class=" p-3 col-lg-3 col-md-4 col-6">
-          <a href="{{ route('Client.devices.details', $product->id) }}">
+          <a href="{{ route('Client.products.details', $product->id) }}">
           <div class="card border-0 news-card position-relative">
             <div class="img-card d-flex align-items-center">
               <img class="w-100 h-auto" src="{{asset($product->header)}}" />

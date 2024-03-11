@@ -24,7 +24,7 @@ class CreateDeviceFeatureTable extends Migration
             $table->string('image')->nullable();
             $table->timestamps();
             
-            $table->foreign('device_id', 'device_feature_device_id_foreign')->references('id')->on('devices')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('device_id', 'device_feature_device_id_foreign')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

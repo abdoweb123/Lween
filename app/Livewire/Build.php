@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class Build extends Component
 {
-    public $Device = NULL;
+    public $Product = NULL;
     
     public $Sizes = NULL;
     public $Colors = NULL;
@@ -20,9 +20,9 @@ class Build extends Component
     public $SelectedColor = NULL;
     public $SelectedSpecification = NULL;
     
-    public function mount($Device)
+    public function mount($Product)
     {
-        $this->Device = $Device;
+        $this->Product = $Product;
         $this->SetData();
     }
     
@@ -52,7 +52,7 @@ class Build extends Component
     {
         Cart::insert([
             'client_id' => client_id(),
-            'device_id' => $this->Device->id,
+            'product_id' => $this->Product->id,
             'color_id' => $this->SelectedColor,
             'item_id' => $this->SelectedSpecification,
             'quantity' => 1,
@@ -61,7 +61,7 @@ class Build extends Component
 
     public function SetData($size_id = NULL,$color_id = NULL,$specification_id = NULL)
     {
-        $this->SelectedItem = $this->Device->Items
+        $this->SelectedItem = $this->Product->Items
             ->when($size_id, function ($query) use($size_id) {
                 return $query->where('size_id', $size_id);
             })
@@ -79,8 +79,8 @@ class Build extends Component
         $this->SelectedSpecification = $this->SelectedItem->id;
         
         
-        $this->Sizes = $this->Device->Items->unique('size_id');
-        $this->Colors = $this->Device->Items->where('size_id',$this->SelectedSize)->unique('color_id');
-        $this->Specifications = $this->Device->Items->where('size_id',$this->SelectedSize)->where('color_id',$this->SelectedColor);
+        $this->Sizes = $this->Product->Items->unique('size_id');
+        $this->Colors = $this->Product->Items->where('size_id',$this->SelectedSize)->unique('color_id');
+        $this->Specifications = $this->Product->Items->where('size_id',$this->SelectedSize)->where('color_id',$this->SelectedColor);
     }
 }

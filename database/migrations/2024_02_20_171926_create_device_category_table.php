@@ -20,7 +20,7 @@ class CreateDeviceCategoryTable extends Migration
             $table->timestamps();
             
             $table->foreign('category_id', 'device_category_category_id_foreign')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('device_id', 'device_category_device_id_foreign')->references('id')->on('devices')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('device_id', 'device_category_device_id_foreign')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

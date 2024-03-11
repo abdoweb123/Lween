@@ -51,13 +51,13 @@ class CreateOrdersTable extends Migration
 
             $table->timestamps();
         });
-        Schema::create('order_device', function (Blueprint $table) {
+        Schema::create('order_product', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id')->nullable();
             $table->foreign('order_id')->nullable()->on('orders')->references('id')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->unsignedBigInteger('device_id')->nullable();
-            $table->foreign('device_id')->nullable()->on('devices')->references('id')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->foreign('product_id')->nullable()->on('products')->references('id')->onUpdate('cascade')->onDelete('cascade');
 
             $table->unsignedBigInteger('color_id')->nullable();
             $table->foreign('color_id')->nullable()->on('colors')->references('id')->onUpdate('cascade')->onDelete('cascade');
@@ -72,7 +72,7 @@ class CreateOrdersTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('order_device');
+        Schema::dropIfExists('order_product');
         Schema::dropIfExists('orders');
     }
 }
